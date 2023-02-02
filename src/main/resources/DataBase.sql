@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS roles
     );
 CREATE TABLE IF NOT EXISTS extraUsersData
 (
-    idPassport     VARCHAR(20) PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
+    passport_number     VARCHAR(20),
     name           VARCHAR(45),
     lastname       VARCHAR(45),
     birthdate    DATE,
@@ -19,10 +20,10 @@ CREATE TABLE IF NOT EXISTS users
     id               BIGSERIAL PRIMARY KEY,
     login            VARCHAR(45) not null,
     password         VARCHAR(45) not null,
-    role             INT         not null,
-    idExtraUsersData VARCHAR(45),
-    FOREIGN KEY (role) REFERENCES roles (id),
-    FOREIGN KEY (idExtraUsersData) REFERENCES extraUsersData (idPassport)
+    idRole             INT         not null,
+    idExtraUsersData INT,
+    FOREIGN KEY (idRole) REFERENCES roles (id),
+    FOREIGN KEY (idExtraUsersData) REFERENCES extraUsersData (id)
     );
 CREATE TABLE IF NOT EXISTS carsMarks
 (
@@ -47,7 +48,7 @@ CREATE TABLE IF NOT EXISTS cars
     idModel     INT         not null,
     FOREIGN KEY (idModel) REFERENCES carsModels (id)
     );
-CREATE TABLE IF NOT EXISTS requests
+CREATE TABLE IF NOT EXISTS orders
 (
     id           BIGSERIAL PRIMARY KEY,
     startDate    DATE    not null,
@@ -55,23 +56,10 @@ CREATE TABLE IF NOT EXISTS requests
     status       BOOLEAN not null,
     idCar        INT     not null,
     idUser       BIGINT     not null,
+    adminLogin VARCHAR(200),
     refuseReason VARCHAR(200),
     FOREIGN KEY (idCar) REFERENCES cars (id),
     FOREIGN KEY (idUser) REFERENCES users (id)
     );
-CREATE TABLE IF NOT EXISTS orders
-(
-    id        BIGSERIAL PRIMARY KEY,
-    idRequest BIGINT not null,
-    idAdmin   BIGINT not null,
-    FOREIGN KEY (idRequest) REFERENCES requests (id),
-    FOREIGN KEY (idAdmin) REFERENCES users (id)
-    );
 
-INSERT INTO roles(role)
-VALUES ('admin'),
-       ('user');
-INSERT INTO users (login, password, role)
-VALUES ('admin', 'admin1', 1),
-       ('user', 'user1', 2);
-
+SELECT * FROM users;
