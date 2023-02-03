@@ -1,5 +1,7 @@
 package org.example.dao.impl;
 
+import org.example.ExtraUsersDataAttributes;
+import org.example.UsersAttributes;
 import org.example.dao.UserDao;
 import org.example.dao.config.ConnectionPool;
 import org.example.models.User;
@@ -12,49 +14,39 @@ import java.util.List;
 import java.util.Optional;
 
 public class UserDaoImpl implements UserDao<User> {
+    private final String ID = "users.id",
+            LOGIN = "users.login",
+            PASSWORD = "users.password",
+            ROLE_ID_IN_USERS = "users.idRole",
+            EXTRA_USERS_ID_IN_USERS = "users.idExtraUsersdata",
+            EXTRA_USERS_ID = "extraUsersData.id",
+            PASSPORT_NUMBER = "extraUsersData.passport_number",
+            NAME = "extraUsersData.name",
+            LASTNAME = "extraUsersData.lastname",
+            DATE_OF_BIRTH = "extraUsersData.dateOfBirth",
+            DRIVING_LICENSE = "extraUsersData.drivingLicense",
+            PHONE = "extraUsersData.phone",
+            REGISTER_DATE = "extraUsersData.registerDate",
+            ROLE = "roles.role",
+            ROLE_ID = "roles.id";
+    private final String GET_BY_ID = "SELECT " + ID + ", " + LOGIN + ", " + PASSWORD + ", "
+            + ROLE + ", " + EXTRA_USERS_ID + ", " + PASSPORT_NUMBER + ", " + NAME + ", " + LASTNAME + ", "
+            + DATE_OF_BIRTH + ", " + DRIVING_LICENSE + ", " + PHONE + ", " + REGISTER_DATE + ", idRole" +
+            "FROM users " +
+            "LEFT JOIN extraUsersData ON " + EXTRA_USERS_ID_IN_USERS + " = " + EXTRA_USERS_ID +
+            "JOIN roles ON " + ROLE_ID_IN_USERS + " = " + ROLE_ID +
+            "WHERE " + ID + " = ?";
+    private final String GET_ALL = "SELECT " + ID + ", " + LOGIN + ", " + PASSWORD + ", "
+            + ROLE + ", " + EXTRA_USERS_ID + ", " + PASSPORT_NUMBER + ", " + NAME + ", " + LASTNAME + ", "
+            + DATE_OF_BIRTH + ", " + DRIVING_LICENSE + ", " + PHONE + ", " + REGISTER_DATE + ", idRole" +
+            " FROM users " +
+            "LEFT JOIN extraUsersData ON " + EXTRA_USERS_ID_IN_USERS + " = " + EXTRA_USERS_ID +
+            " JOIN roles ON " + ROLE_ID_IN_USERS + " = " + ROLE_ID;
+    private final String UPDATE = "UPDATE users SET login =  ? , password = ? WHERE users.id = ?";
+    private final String DELETE = "DELETE FROM users WHERE users.id = ?";
+    private final String INSERT = "INSERT INTO users (login,password,idRole) VALUES (?,?,?)";
 
-    public enum UsersAttributes{
-        ID("users.id"),
-        LOGIN("users.login"),
-        PASSWORD("users.password"),
-        ID_ROLE("users.idRole"),
-        ID_EXTRA_DATA("users.idExtraUsersData");
-
-        String columnName;
-        UsersAttributes(String columnName){
-            this.columnName = columnName;
-        }
-
-    }
-
-    public enum ExtraUsersDataAttributes{
-        ID("extraUsersData.id"),
-        PASSPORT_NUMBER("extraUsersData.passport_number"),
-        NAME("extraUsersData.name"),
-        LASTNAME("extraUsersData.lastname"),
-        BIRTHDATE("extraUsersData.birthdate"),
-        DRIVING_LICENSE("extraUsersData.drivingLicense"),
-        PHONE("extraUsersData.phone"),
-        REGISTER_DATE("extraUsersData.registerDate");
-
-        String columnName;
-        ExtraUsersDataAttributes(String columnName){
-            this.columnName = columnName;
-        }
-
-    }
-
-    public enum RolesAttributes{
-        ID("roles.id"),
-        ROLE("roles.role");
-
-        String columnName;
-        RolesAttributes(String columnName){
-            this.columnName = columnName;
-        }
-
-    }
-    public static final String GET_ALL_USERS = "SELECT " + UsersAttributes.ID.columnName + ", "
+    /*public static final String GET_ALL_USERS = "SELECT " + UsersAttributes.ID.columnName + ", "
             + UsersAttributes.LOGIN.columnName + ", "
             + UsersAttributes.PASSWORD.columnName + ", "
             + UsersAttributes.ID_EXTRA_DATA.columnName + ", "
@@ -66,7 +58,7 @@ public class UserDaoImpl implements UserDao<User> {
             + ExtraUsersDataAttributes.PASSPORT_NUMBER.columnName + ", "
             + ExtraUsersDataAttributes.DRIVING_LICENSE.columnName + ", "
             + ExtraUsersDataAttributes.REGISTER_DATE.columnName;
-
+*/
 
 
     @Override
@@ -76,7 +68,7 @@ public class UserDaoImpl implements UserDao<User> {
 
     @Override
     public List<User> getAll() throws SQLException {
-        PreparedStatement ps = ConnectionPool.INSTANCE.getPool().getConnection().prepareStatement(GET_ALL_USERS);
+        PreparedStatement ps = ConnectionPool.INSTANCE.getPool().getConnection().prepareStatement(GET_ALL);
         ResultSet rs = ps.executeQuery();
         return resultSetIntoUsers(rs);
     }

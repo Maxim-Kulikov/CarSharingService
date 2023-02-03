@@ -17,6 +17,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
     testCompileOnly 'org.projectlombok:lombok:1.18.20'
+    compileOnly('jakarta.servlet:jakarta.servlet-api:5.0.0')
 
 }
 

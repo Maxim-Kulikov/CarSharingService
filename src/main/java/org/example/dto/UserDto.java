@@ -1,21 +1,19 @@
-package org.example.models;
+package org.example.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Date;
-
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class UserDto {
     private Long id;
     private String login;
-    private String password;
-    private Integer role;
+    private String role;
     private Long idExtraData;
 
     private String passportNumber;
@@ -25,4 +23,5 @@ public class User {
     private String drivingLicense;
     private String phone;
     private Date registerDate;
+
 }
