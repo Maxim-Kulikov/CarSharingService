@@ -1,10 +1,8 @@
 package org.example.dao.impl;
 
-import org.example.ExtraUsersDataAttributes;
-import org.example.UsersAttributes;
 import org.example.dao.UserDao;
 import org.example.dao.config.ConnectionPool;
-import org.example.models.User;
+import org.example.models.UserEntity;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class UserDaoImpl implements UserDao<User> {
+public class UserDaoImpl implements UserDao<UserEntity> {
     private final String ID = "users.id",
             LOGIN = "users.login",
             PASSWORD = "users.password",
@@ -62,44 +60,44 @@ public class UserDaoImpl implements UserDao<User> {
 
 
     @Override
-    public Optional<User> get(long id) {
+    public Optional<UserEntity> get(long id) {
         return Optional.empty();
     }
 
     @Override
-    public List<User> getAll() throws SQLException {
+    public List<UserEntity> getAll() throws SQLException {
         PreparedStatement ps = ConnectionPool.INSTANCE.getPool().getConnection().prepareStatement(GET_ALL);
         ResultSet rs = ps.executeQuery();
         return resultSetIntoUsers(rs);
     }
 
     @Override
-    public void save(User user) {
+    public void save(UserEntity userEntity) {
 
     }
 
     @Override
-    public void update(User user, String[] params) {
+    public void update(UserEntity userEntity, String[] params) {
 
     }
 
     @Override
-    public void delete(User user) {
+    public void delete(UserEntity userEntity) {
 
     }
 
-    private List<User> resultSetIntoUsers(ResultSet resultSet) throws SQLException {
-        List<User> users = new ArrayList<>();
+    private List<UserEntity> resultSetIntoUsers(ResultSet resultSet) throws SQLException {
+        List<UserEntity> userEntities = new ArrayList<>();
         while(resultSet.next()){
-            users.add(
-                    User.builder()
+            userEntities.add(
+                    UserEntity.builder()
                     .id(resultSet.getLong("id"))
                     .login(resultSet.getString("login"))
                     .password(resultSet.getString("password"))
-                    .role(resultSet.getInt("role"))
+                    .roleEntity(resultSet.getInt("role"))
                     .build()
             );
         }
-        return users;
+        return userEntities;
     }
 }

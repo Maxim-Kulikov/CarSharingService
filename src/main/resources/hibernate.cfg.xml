@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="connection.url">jdbc:postgresql://localhost:5432/postgres</property>
+    <property name="connection.driver_class">org.postgresql.Driver</property>
+    <property name="connection.username">postgres</property>
+    <property name="connection.password">toor</property>
+    <!--<property name="connection.url"/>
+    <property name="connection.driver_class"/>
+     <property name="connection.username"/> -->
+    <!-- <property name="connection.password"/> -->
+
+    <!-- DB schema will be updated if needed -->
+    <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
+    <mapping resource="CarsEntity.hbm.xml"/>
+    <mapping class="org.example.models.CarEntity"/>
+    <mapping resource="CarsmarksEntity.hbm.xml"/>
+    <mapping class="org.example.models.CarMarkEntity"/>
+    <mapping class="org.example.models.CarModelEntity"/>
+    <mapping resource="CarsmodelsEntity.hbm.xml"/>
+    <mapping class="org.example.models.ExtraUserDataEntity"/>
+    <mapping resource="ExtrausersdataEntity.hbm.xml"/>
+    <mapping class="org.example.models.OrderEntity"/>
+    <mapping resource="OrdersEntity.hbm.xml"/>
+    <mapping class="org.example.models.RoleEntity"/>
+    <mapping resource="RolesEntity.hbm.xml"/>
+    <mapping class="org.example.models.UserEntity"/>
+    <mapping resource="UsersEntity.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>

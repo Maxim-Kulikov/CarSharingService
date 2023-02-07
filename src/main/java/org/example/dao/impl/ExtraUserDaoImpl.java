@@ -1,35 +1,35 @@
 package org.example.dao.impl;
 
 import org.example.dao.ExtraUserDao;
-import org.example.models.User;
+import org.example.models.UserEntity;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public class ExtraUserDaoImpl implements ExtraUserDao<User> {
+public class ExtraUserDaoImpl implements ExtraUserDao<UserEntity> {
     @Override
-    public Optional<User> get(long id) {
+    public Optional<UserEntity> get(long id) {
         return Optional.empty();
     }
 
     @Override
-    public List<User> getAll() throws SQLException {
+    public List<UserEntity> getAll() throws SQLException {
         return null;
     }
 
     @Override
-    public void save(User user) {
+    public void save(UserEntity userEntity) {
 
     }
 
     @Override
-    public void update(User user, String[] params) {
+    public void update(UserEntity userEntity, String[] params) {
 
     }
 
     @Override
-    public void delete(User user) {
+    public void delete(UserEntity userEntity) {
 
     }
 }

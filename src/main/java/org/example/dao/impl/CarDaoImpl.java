@@ -1,34 +1,34 @@
 package org.example.dao.impl;
 
 import org.example.dao.CarDao;
-import org.example.models.Car;
+import org.example.models.CarEntity;
 
 import java.util.List;
 import java.util.Optional;
 
-public class CarDaoImpl implements CarDao<Car> {
+public class CarDaoImpl implements CarDao<CarEntity> {
     @Override
-    public Optional<Car> get(long id) {
+    public Optional<CarEntity> get(long id) {
         return Optional.empty();
     }
 
     @Override
-    public List<Car> getAll() {
+    public List<CarEntity> getAll() {
         return null;
     }
 
     @Override
-    public void save(Car car) {
+    public void save(CarEntity car) {
 
     }
 
     @Override
-    public void update(Car car, String[] params) {
+    public void update(CarEntity car, String[] params) {
 
     }
 
     @Override
-    public void delete(Car car) {
+    public void delete(CarEntity car) {
 
     }
 

@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="org.example.dao.RolesEntity" table="roles" schema="public" catalog="car_sharing_service">
+        <id name="id">
+            <column name="id" sql-type="integer"/>
+        </id>
+        <property name="role">
+            <column name="role" sql-type="varchar(45)" length="45"/>
+        </property>
+        <set name= inverse="true">
+            <key>
+                <column name="role"/>
+            </key>
+            <one-to-many not-found="ignore" class="org.example.dao.UsersEntity"/>
+        </set>
+    </class>
+</hibernate-mapping>

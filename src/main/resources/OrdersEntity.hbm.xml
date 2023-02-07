@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="org.example.dao.OrdersEntity" table="orders" schema="public" catalog="car_sharing_service">
+        <id name="id">
+            <column name="id" sql-type="bigint"/>
+        </id>
+        <property name="startdate">
+            <column name="startdate" sql-type="date"/>
+        </property>
+        <property name="finishdate">
+            <column name="finishdate" sql-type="date"/>
+        </property>
+        <property name="status">
+            <column name="status" sql-type="boolean"/>
+        </property>
+        <property name="idcar">
+            <column name="idcar" sql-type="integer"/>
+        </property>
+        <property name="iduser">
+            <column name="iduser" sql-type="bigint"/>
+        </property>
+        <property name="adminlogin">
+            <column name="adminlogin" sql-type="varchar(200)" length="200" not-null="true"/>
+        </property>
+        <property name="refusereason">
+            <column name="refusereason" sql-type="varchar(200)" length="200" not-null="true"/>
+        </property>
+        <many-to-one name="carsByIdcar" class="org.example.dao.CarsEntity">
+            <column name="idcar"/>
+        </many-to-one>
+        <many-to-one name="usersByIduser" class="org.example.dao.UsersEntity">
+            <column name="iduser"/>
+        </many-to-one>
+
+    </class>
+</hibernate-mapping>

@@ -1,21 +1,18 @@
 package org.example.servlets;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet("/loginServlet")
 public class LoginServlet extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String username = req.getParameter("username"),
+        /*String username = req.getParameter("username"),
                 password = req.getParameter("password");
 
         System.out.println(username);
@@ -23,7 +20,9 @@ public class LoginServlet extends HttpServlet {
 
         if(username == null) username = "maks";
         if(password == null) password = "1234";
+*/       resp.setContentType("text/html");
 
+        String username = "maks", password = "1234";
         PrintWriter pw = resp.getWriter();
 
         String htmlResponse = "<html>";
@@ -33,6 +32,6 @@ public class LoginServlet extends HttpServlet {
 
         // return response
         pw.println(htmlResponse);
-        pw.flush();
+        //pw.flush();
     }
 }

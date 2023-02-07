@@ -1,11 +1,5 @@
 package org.example.dao.config;
 
-import org.example.dao.Dao;
-import org.example.models.Order;
-
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -16,7 +10,7 @@ public enum ConnectionPool{
     INSTANCE;
     public static final int poolSize = 10;
     public static final String DRIVER = "org.postgresql.Driver";
-    public static final String URL = "jdbc:postgresql://localhost:5432/car_sharing_service";
+    public static final String URL = "jdbc:postgresql://localhost:5432/postgres";
     public static final String LOGIN = "postgres";
     public static final String PASSWORD = "toor";
     private Pool pool;

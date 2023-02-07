@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS extraUsersData
     registerDate   DATE
     );
 
-CREATE TABLE IF NOT EXISTS users
+CREATE TABLE IF NOT EXISTS userEntities
 (
     id               BIGSERIAL PRIMARY KEY,
     login            VARCHAR(45) not null,
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS cars
     carNumber   VARCHAR(20) not null,
     price       INT         not null,
     limitations VARCHAR(200),
-    idImage     INT,
+    idImage     INT,price
     idModel     INT         not null,
     FOREIGN KEY (idModel) REFERENCES carsModels (id)
     );
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS orders
     adminLogin VARCHAR(200),
     refuseReason VARCHAR(200),
     FOREIGN KEY (idCar) REFERENCES cars (id),
-    FOREIGN KEY (idUser) REFERENCES users (id)
+    FOREIGN KEY (idUser) REFERENCES userEntities (id)
     );
 
-SELECT * FROM users;
+SELECT * FROM userEntities;
