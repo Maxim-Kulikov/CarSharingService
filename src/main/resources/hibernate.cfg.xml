@@ -15,7 +15,8 @@
 
     <!-- DB schema will be updated if needed -->
     <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
-    <mapping resource="CarsEntity.hbm.xml"/>
+
+    <!-- <mapping resource="CarsEntity.hbm.xml"/>
     <mapping class="org.example.models.CarEntity"/>
     <mapping resource="CarsmarksEntity.hbm.xml"/>
     <mapping class="org.example.models.CarMarkEntity"/>
@@ -28,6 +29,6 @@
     <mapping class="org.example.models.RoleEntity"/>
     <mapping resource="RolesEntity.hbm.xml"/>
     <mapping class="org.example.models.UserEntity"/>
-    <mapping resource="UsersEntity.hbm.xml"/>
+    <mapping resource="UsersEntity.hbm.xml"/>  -->
   </session-factory>
 </hibernate-configuration>

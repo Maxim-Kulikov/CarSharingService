@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS roles
 (
-    id   SERIAL,
+    id   SERIAL PRIMARY KEY UNIQUE ,
     role VARCHAR(45) not null
     );
 CREATE TABLE IF NOT EXISTS extraUsersData
@@ -15,16 +15,17 @@ CREATE TABLE IF NOT EXISTS extraUsersData
     registerDate   DATE
     );
 
-CREATE TABLE IF NOT EXISTS userEntities
+CREATE TABLE IF NOT EXISTS users
 (
     id               BIGSERIAL PRIMARY KEY,
     login            VARCHAR(45) not null,
     password         VARCHAR(45) not null,
     idRole             INT         not null,
-    idExtraUsersData INT,
+    idExtraUsersData BIGINT,
     FOREIGN KEY (idRole) REFERENCES roles (id),
     FOREIGN KEY (idExtraUsersData) REFERENCES extraUsersData (id)
     );
+
 CREATE TABLE IF NOT EXISTS carsMarks
 (
     id   SERIAL PRIMARY KEY,
@@ -44,7 +45,7 @@ CREATE TABLE IF NOT EXISTS cars
     carNumber   VARCHAR(20) not null,
     price       INT         not null,
     limitations VARCHAR(200),
-    idImage     INT,price
+    idImage     INT,
     idModel     INT         not null,
     FOREIGN KEY (idModel) REFERENCES carsModels (id)
     );
@@ -52,14 +53,16 @@ CREATE TABLE IF NOT EXISTS orders
 (
     id           BIGSERIAL PRIMARY KEY,
     startDate    DATE    not null,
-    finishDate      DATE    not null,
+    finishDate   DATE    not null,
     status       BOOLEAN not null,
     idCar        INT     not null,
     idUser       BIGINT     not null,
     adminLogin VARCHAR(200),
     refuseReason VARCHAR(200),
     FOREIGN KEY (idCar) REFERENCES cars (id),
-    FOREIGN KEY (idUser) REFERENCES userEntities (id)
+    FOREIGN KEY (idUser) REFERENCES users (id)
     );
 
-SELECT * FROM userEntities;
+INSERT INTO roles (id, role) VALUES (1, 'admin'), (2, 'user');
+INSERT INTO users (login, password, idRole) VALUES ('maks', 1234, 1), ('liza', 4321, 2);
+SELECT * FROM users;

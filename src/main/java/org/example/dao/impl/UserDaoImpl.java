@@ -3,6 +3,7 @@ package org.example.dao.impl;
 import org.example.dao.UserDao;
 import org.example.dao.config.ConnectionPool;
 import org.example.models.UserEntity;
+import org.example.utils.HibernateSessionFactoryUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -61,7 +62,7 @@ public class UserDaoImpl implements UserDao<UserEntity> {
 
     @Override
     public Optional<UserEntity> get(long id) {
-        return Optional.empty();
+        return Optional.ofNullable(HibernateSessionFactoryUtil.INSTANCE.getSessionFactory().openSession().get(UserEntity.class, id));
     }
 
     @Override
@@ -88,7 +89,7 @@ public class UserDaoImpl implements UserDao<UserEntity> {
 
     private List<UserEntity> resultSetIntoUsers(ResultSet resultSet) throws SQLException {
         List<UserEntity> userEntities = new ArrayList<>();
-        while(resultSet.next()){
+        /*while(resultSet.next()){
             userEntities.add(
                     UserEntity.builder()
                     .id(resultSet.getLong("id"))
@@ -97,7 +98,7 @@ public class UserDaoImpl implements UserDao<UserEntity> {
                     .roleEntity(resultSet.getInt("role"))
                     .build()
             );
-        }
+        }*/
         return userEntities;
     }
 }

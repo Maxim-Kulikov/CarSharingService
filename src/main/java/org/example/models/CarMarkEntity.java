@@ -1,6 +1,15 @@
 package org.example.models;
 
 import jakarta.persistence.*;
+import lombok.*;
+
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 
 @Entity
 @Table(name = "carsMarks")
