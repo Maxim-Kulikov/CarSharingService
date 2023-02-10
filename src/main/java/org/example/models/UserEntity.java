@@ -25,7 +25,7 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
-    @OneToOne
+    @OneToOne//(cascade = CascadeType.)
     @JoinColumn(name = "idRole", referencedColumnName = "id")
     private RoleEntity roleEntity;
 

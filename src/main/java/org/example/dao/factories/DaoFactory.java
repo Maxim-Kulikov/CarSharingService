@@ -1,9 +1,6 @@
 package org.example.dao.factories;
 
-import org.example.dao.impl.CarDaoImpl;
-import org.example.dao.impl.ExtraUserDaoImpl;
-import org.example.dao.impl.OrderDaoImpl;
-import org.example.dao.impl.UserDaoImpl;
+import org.example.dao.impl.*;
 
 public enum DaoFactory {
     INSTANCE;
@@ -12,7 +9,7 @@ public enum DaoFactory {
     private final CarDaoImpl carDao = new CarDaoImpl();
     private final OrderDaoImpl orderDao = new OrderDaoImpl();
     private final ExtraUserDaoImpl extraUserDao = new ExtraUserDaoImpl();
-
+    private final RoleDaoImpl roleDao = new RoleDaoImpl();
     public UserDaoImpl getUserDao() {
         return userDao;
     }
@@ -22,8 +19,8 @@ public enum DaoFactory {
     public CarDaoImpl getCarDao(){
         return carDao;
     }
-
     public OrderDaoImpl getOrderDao(){
         return orderDao;
     }
+    public RoleDaoImpl getRoleDao(){return roleDao;}
 }

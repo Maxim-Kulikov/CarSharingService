@@ -4,6 +4,9 @@ import org.example.dao.UserDao;
 import org.example.dao.config.ConnectionPool;
 import org.example.models.UserEntity;
 import org.example.utils.HibernateSessionFactoryUtil;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -59,22 +62,32 @@ public class UserDaoImpl implements UserDao<UserEntity> {
             + ExtraUsersDataAttributes.REGISTER_DATE.columnName;
 */
 
+    private SessionFactory sessionFactory;
 
-    @Override
-    public Optional<UserEntity> get(long id) {
-        return Optional.ofNullable(HibernateSessionFactoryUtil.INSTANCE.getSessionFactory().openSession().get(UserEntity.class, id));
+    public UserDaoImpl(){
+        this.sessionFactory = HibernateSessionFactoryUtil.INSTANCE.getSessionFactory();
     }
 
     @Override
-    public List<UserEntity> getAll() throws SQLException {
-        PreparedStatement ps = ConnectionPool.INSTANCE.getPool().getConnection().prepareStatement(GET_ALL);
-        ResultSet rs = ps.executeQuery();
-        return resultSetIntoUsers(rs);
+    public Optional<UserEntity> get(long id) {
+        return Optional.ofNullable(sessionFactory.openSession().get(UserEntity.class, id));
+    }
+
+    @Override
+    public List<UserEntity> getAll() {
+        Session session = sessionFactory.openSession();
+        List<UserEntity> users = loadAllData(UserEntity.class, session);
+        session.close();
+        return users;
     }
 
     @Override
     public void save(UserEntity userEntity) {
-
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.persist(userEntity);
+        session.flush();
+        transaction.commit();
     }
 
     @Override
@@ -84,7 +97,11 @@ public class UserDaoImpl implements UserDao<UserEntity> {
 
     @Override
     public void delete(UserEntity userEntity) {
-
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.remove(userEntity);
+        session.flush();
+        transaction.commit();
     }
 
     private List<UserEntity> resultSetIntoUsers(ResultSet resultSet) throws SQLException {
@@ -101,4 +118,6 @@ public class UserDaoImpl implements UserDao<UserEntity> {
         }*/
         return userEntities;
     }
+
+
 }

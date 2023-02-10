@@ -63,6 +63,4 @@ CREATE TABLE IF NOT EXISTS orders
     FOREIGN KEY (idUser) REFERENCES users (id)
     );
 
-INSERT INTO roles (id, role) VALUES (1, 'admin'), (2, 'user');
-INSERT INTO users (login, password, idRole) VALUES ('maks', 1234, 1), ('liza', 4321, 2);
 SELECT * FROM users;
