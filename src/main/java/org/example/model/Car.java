@@ -1,4 +1,4 @@
-package org.example.models;
+package org.example.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +13,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "cars")
-public class CarEntity {
+public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
@@ -21,7 +21,7 @@ public class CarEntity {
 
     @OneToOne
     @JoinColumn(name = "idModel", referencedColumnName = "id")
-    private CarModelEntity carModelEntity;
+    private CarModel carModel;
 
     @Column(name = "carNumber")
     private String carNumber;

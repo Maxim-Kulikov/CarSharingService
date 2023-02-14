@@ -1,48 +1,55 @@
 package org.example.dao.impl;
 
+import jakarta.transaction.Transactional;
+import org.example.model.Role;
 import org.example.dao.RoleDao;
-import org.example.models.RoleEntity;
-import org.example.utils.HibernateSessionFactoryUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public class RoleDaoImpl implements RoleDao<RoleEntity> {
+//@Repository
+//@Transactional
+@Component
+//@ComponentScan
+public class RoleDaoImpl implements RoleDao<Role> {
 
+    @Autowired
     private SessionFactory sessionFactory;
 
-    public RoleDaoImpl(){
-        sessionFactory = HibernateSessionFactoryUtil.INSTANCE.getSessionFactory();
-    }
-
     @Override
-    public Optional<RoleEntity> get(long id) {
+    public Optional<Role> get(long id) {
         Session session = sessionFactory.openSession();
-        Optional<RoleEntity> roleEntity = Optional.ofNullable(session.get(RoleEntity.class, id));
+        Optional<Role> roleEntity = Optional.ofNullable(session.get(Role.class, id));
         session.close();
         return roleEntity;
     }
 
     @Override
-    public List<RoleEntity> getAll() throws SQLException {
-        return null;
+    public List<Role> getAll(){
+        Session session = sessionFactory.openSession();
+        List<Role> roles = loadAllData(Role.class, session);
+        session.close();
+        return roles;
     }
 
     @Override
-    public void save(RoleEntity roleEntity) {
+    public void save(Role role) {
 
     }
 
     @Override
-    public void update(RoleEntity roleEntity, String[] params) {
+    public void update(Role role, String[] params) {
 
     }
 
     @Override
-    public void delete(RoleEntity roleEntity) {
+    public void delete(Role role) {
 
     }
 }

@@ -1,4 +1,4 @@
-package org.example.models;
+package org.example.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,7 +15,7 @@ import java.sql.Date;
 
 @Entity
 @Table(name = "orders")
-public class OrderEntity {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
@@ -32,11 +32,11 @@ public class OrderEntity {
 
     @OneToOne
     @JoinColumn(name = "idCar", referencedColumnName = "id")
-    private CarEntity car;
+    private Car car;
 
     @OneToOne
     @JoinColumn(name = "idUser", referencedColumnName = "id")
-    private UserEntity userEntity;
+    private User user;
 
     @Column(name = "adminLogin")
     private String adminLogin;

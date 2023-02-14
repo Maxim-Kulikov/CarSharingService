@@ -13,8 +13,9 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.18.22'
     implementation 'org.postgresql:postgresql:42.5.1'
     implementation 'org.hibernate:hibernate-core:6.1.6.Final'
-    implementation 'org.springframework:spring-core:6.0.3'
-    implementation 'org.springframework:spring-context:6.0.3'
+    implementation "org.springframework:spring-core:${spring_version}"
+    implementation "org.springframework:spring-context:${spring_version}"
+    implementation "org.springframework:spring-webmvc:${spring_version}"
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
     testCompileOnly 'org.projectlombok:lombok:1.18.20'

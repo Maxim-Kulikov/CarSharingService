@@ -1,4 +1,4 @@
-package org.example.models;
+package org.example.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,7 +16,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "roles")
-public class RoleEntity {
+public class Role {
     @Id
     @Column(name = "id")
     private Short id;

@@ -1,4 +1,4 @@
-package org.example.models;
+package org.example.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +13,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "users")
-public class UserEntity {
+public class User {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -27,11 +27,11 @@ public class UserEntity {
 
     @OneToOne//(cascade = CascadeType.)
     @JoinColumn(name = "idRole", referencedColumnName = "id")
-    private RoleEntity roleEntity;
+    private Role role;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idExtraUsersData", referencedColumnName = "id")
-    private ExtraUserDataEntity extraUserDataEntity;
+    private ExtraUserData extraUserData;
 
     /*private String passportNumber;
     private String name;

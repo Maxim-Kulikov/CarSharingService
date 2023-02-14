@@ -1,4 +1,4 @@
-package org.example.models;
+package org.example.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,7 +15,7 @@ import java.sql.Date;
 
 @Entity
 @Table(name = "extraUsersData")
-public class ExtraUserDataEntity {
+public class ExtraUserData {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")

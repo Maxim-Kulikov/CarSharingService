@@ -17,18 +17,18 @@
     <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
 
     <!-- <mapping resource="CarsEntity.hbm.xml"/>
-    <mapping class="org.example.models.CarEntity"/>
+    <mapping class="org.example.model.Car"/>
     <mapping resource="CarsmarksEntity.hbm.xml"/>
-    <mapping class="org.example.models.CarMarkEntity"/>
-    <mapping class="org.example.models.CarModelEntity"/>
+    <mapping class="org.example.model.CarMark"/>
+    <mapping class="org.example.model.CarModel"/>
     <mapping resource="CarsmodelsEntity.hbm.xml"/>
-    <mapping class="org.example.models.ExtraUserDataEntity"/>
+    <mapping class="org.example.model.ExtraUserData"/>
     <mapping resource="ExtrausersdataEntity.hbm.xml"/>
-    <mapping class="org.example.models.OrderEntity"/>
+    <mapping class="org.example.model.Order"/>
     <mapping resource="OrdersEntity.hbm.xml"/>
-    <mapping class="org.example.models.RoleEntity"/>
+    <mapping class="org.example.model.Role"/>
     <mapping resource="RolesEntity.hbm.xml"/>
-    <mapping class="org.example.models.UserEntity"/>
+    <mapping class="org.example.model.User"/>
     <mapping resource="UsersEntity.hbm.xml"/>  -->
   </session-factory>
 </hibernate-configuration>

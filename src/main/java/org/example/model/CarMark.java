@@ -1,4 +1,4 @@
-package org.example.models;
+package org.example.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,18 +12,13 @@ import lombok.*;
 @Builder
 
 @Entity
-@Table(name = "carsModels")
-public class CarModelEntity {
+@Table(name = "carsMarks")
+public class CarMark {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "model")
-    private String model;
-
-    @ManyToOne
-    @JoinColumn(name = "idMark", referencedColumnName = "id")
-    private CarMarkEntity mark;
+    @Column(name = "mark")
+    private String mark;
 }
-

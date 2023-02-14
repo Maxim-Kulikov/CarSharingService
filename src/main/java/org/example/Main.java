@@ -1,12 +1,9 @@
 package org.example;
 
-import org.example.dao.factories.DaoFactory;
-import org.example.models.ExtraUserDataEntity;
-import org.example.models.RoleEntity;
-import org.example.models.UserEntity;
-
-import java.util.List;
-import java.util.Optional;
+import org.example.dao.factory.DaoFactory;
+import org.example.dao.impl.RoleDaoImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class Main {
     public static void main(String[] args) {
@@ -35,9 +32,11 @@ public class Main {
 
         DaoFactory.INSTANCE.getUserDao().save(userEntity);*/
 
-        //DaoFactory.INSTANCE.getUserDao().delete(DaoFactory.INSTANCE.getUserDao().get(252).get());
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(DaoFactory.class);
+        DaoFactory daoFactory = ctx.getBean(DaoFactory.class);
 
-
+        daoFactory.getUserDao().getAll().forEach(user -> System.out.println(user.toString()));
+        daoFactory.getRoleDao().getAll().forEach(user -> System.out.println(user.toString()));
 
     }
 

@@ -1,36 +1,38 @@
 package org.example.dao.impl;
 
+import org.example.model.Order;
 import org.example.dao.OrderDao;
-import org.example.models.OrderEntity;
+import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public class OrderDaoImpl implements OrderDao<OrderEntity> {
+@Component
+public class OrderDaoImpl implements OrderDao<Order> {
 
     @Override
-    public Optional<OrderEntity> get(long id) {
+    public Optional<Order> get(long id) {
         return Optional.empty();
     }
 
     @Override
-    public List<OrderEntity> getAll() throws SQLException {
+    public List<Order> getAll() throws SQLException {
         return null;
     }
 
     @Override
-    public void save(OrderEntity orderEntity) {
+    public void save(Order order) {
 
     }
 
     @Override
-    public void update(OrderEntity orderEntity, String[] params) {
+    public void update(Order order, String[] params) {
 
     }
 
     @Override
-    public void delete(OrderEntity orderEntity) {
+    public void delete(Order order) {
 
     }
 

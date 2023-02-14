@@ -1,36 +1,39 @@
 package org.example.dao.impl;
 
+import org.example.model.ExtraUserData;
 import org.example.dao.ExtraUserDao;
-import org.example.models.ExtraUserDataEntity;
-import org.example.models.UserEntity;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public class ExtraUserDaoImpl implements ExtraUserDao<ExtraUserDataEntity> {
+@Component
+@ComponentScan
+public class ExtraUserDaoImpl implements ExtraUserDao<ExtraUserData> {
     @Override
-    public Optional<ExtraUserDataEntity> get(long id) {
+    public Optional<ExtraUserData> get(long id) {
         return Optional.empty();
     }
 
     @Override
-    public List<ExtraUserDataEntity> getAll() throws SQLException {
+    public List<ExtraUserData> getAll() throws SQLException {
         return null;
     }
 
     @Override
-    public void save(ExtraUserDataEntity extraUserDataEntity) {
+    public void save(ExtraUserData extraUserData) {
 
     }
 
     @Override
-    public void update(ExtraUserDataEntity extraUserDataEntity, String[] params) {
+    public void update(ExtraUserData extraUserData, String[] params) {
 
     }
 
     @Override
-    public void delete(ExtraUserDataEntity extraUserDataEntity) {
+    public void delete(ExtraUserData extraUserData) {
 
     }
 }
