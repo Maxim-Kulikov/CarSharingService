@@ -1,11 +1,7 @@
 package org.example;
 
-import org.example.dao.factory.DaoFactory;
-import org.example.dao.impl.RoleDaoImpl;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-public class Main {
+public class Main{
     public static void main(String[] args) {
         /*List<UserEntity> users = DaoFactory.INSTANCE.getUserDao().getAll();
         users.forEach(user -> System.out.println(user.toString()));
@@ -32,12 +28,17 @@ public class Main {
 
         DaoFactory.INSTANCE.getUserDao().save(userEntity);*/
 
-        ApplicationContext ctx = new AnnotationConfigApplicationContext(DaoFactory.class);
+        /*ApplicationContext ctx = new AnnotationConfigApplicationContext(DaoFactory.class);
         DaoFactory daoFactory = ctx.getBean(DaoFactory.class);
+*/
+        //daoFactory.getUserDao().getAll().forEach(user -> System.out.println(user.toString()));
+        //daoFactory.getRoleDao().getAll().forEach(user -> System.out.println(user.toString()));
 
-        daoFactory.getUserDao().getAll().forEach(user -> System.out.println(user.toString()));
-        daoFactory.getRoleDao().getAll().forEach(user -> System.out.println(user.toString()));
 
+        //SpringApplication.run(Main.class, args);
     }
 
+    public void run(String... args) throws Exception {
+
+    }
 }

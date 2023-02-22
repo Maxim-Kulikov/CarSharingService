@@ -1,4 +1,5 @@
-package org.example.dao.impl;
+/*
+package org.example.config;
 
 import org.example.model.*;
 import org.hibernate.SessionFactory;
@@ -30,6 +31,7 @@ public class HibernateSessionFactoryUtil {
         return sessionFactory;
     }
 
+
     private Properties properties(){
         Properties settings = new Properties();
         settings.put(Environment.DRIVER, "org.postgresql.Driver");
@@ -56,3 +58,4 @@ public class HibernateSessionFactoryUtil {
         return configuration;
     }
 }
+*/
