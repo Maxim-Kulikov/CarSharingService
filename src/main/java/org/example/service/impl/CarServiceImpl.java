@@ -15,9 +15,9 @@ import java.util.stream.Stream;
 @Service
 @ComponentScan("org.example")
 @AllArgsConstructor
-public class CarService {
+public class CarServiceImpl {
     @Autowired
-    private final CarListService carListService;
+    private final CarListServiceImpl carListServiceImpl;
     @Autowired
     private final CarMapper carMapper;
     @Autowired
@@ -73,7 +73,7 @@ public class CarService {
 
     public void save(int idModel, String number, int price, String limitations, int idImage){
         carDao.save(Car.builder()
-                .carModel(carListService.findById(idModel))
+                .carModel(carListServiceImpl.findById(idModel))
                 .price(price)
                 .limitations(limitations)
                 .idImage(idImage)

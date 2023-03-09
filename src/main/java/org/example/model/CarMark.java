@@ -1,6 +1,7 @@
 package org.example.model;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -17,8 +18,9 @@ import javax.persistence.*;
 @Table(name = "cars_marks")
 public class CarMark {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false, unique = true)
+    @GeneratedValue(generator = "cars_marks_id_seq")
+    @GenericGenerator(name = "cars_marks_id_seq", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator")
     private Integer id;
 
     @Column(name = "mark")

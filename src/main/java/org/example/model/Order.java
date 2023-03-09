@@ -1,6 +1,7 @@
 package org.example.model;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -18,8 +19,9 @@ import java.sql.Date;
 @Table(name = "orders")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, unique = true)
+    @GeneratedValue(generator = "orders_id_seq")
+    @GenericGenerator(name = "orders_id_seq", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator")
     private Long id;
 
     @Column(name = "start_date")

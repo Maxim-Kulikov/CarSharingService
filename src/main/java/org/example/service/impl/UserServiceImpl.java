@@ -6,6 +6,7 @@ import org.example.dao.repository.UserDao;
 import org.example.dto.userDTO.UserAuthorizeRequest;
 import org.example.dto.userDTO.UserExisted;
 import org.example.mapper.UserMapper;
+import org.example.model.ExtraUserData;
 import org.example.model.Role;
 import org.example.model.User;
 import org.example.service.UserService;
@@ -39,6 +40,7 @@ public class UserServiceImpl implements UserService {
         return Optional.ofNullable(dto)
                 .map(userMapper::toUser)
                 .map(this::setRole)
+                .map(this::setEmptyExtraUserData)
                 .map(userDao::save)
                 .map(userMapper::toUserExisted)
                 .orElseThrow(()->new RuntimeException("Can not save user!"));
@@ -57,18 +59,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserExisted update(UserExisted dto) {
-        return null;
+        User user = userDao.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("Could not update user! Id does not exist!"));
+        user.setLogin(dto.getLogin());
+        userDao.save(user);
+        return userMapper.toUserExisted(user);
     }
 
     @Override
     public UserExisted authorize(UserAuthorizeRequest dto) {
         User user = userMapper.toUser(dto);
-        user = userDao.findFirstByLogin(user.getLogin()).get();
+        user = userDao.findFirstByLoginAndPassword(user.getLogin(), user.getPassword()).get();
         return userMapper.toUserExisted(user);
     }
 
     private User setRole(User user){
-        user.setRole(roleDao.getRoleById(2).get());
+        user.setRole(findRole("user"));
+        return user;
+    }
+
+    private User setEmptyExtraUserData(User user){
+        user.setExtraUserData(new ExtraUserData());
         return user;
     }
 

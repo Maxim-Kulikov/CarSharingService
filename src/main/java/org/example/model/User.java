@@ -1,6 +1,7 @@
 package org.example.model;
 
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -11,13 +12,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 @Entity
 @Table(name = "users")
 public class User {
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "id", nullable = false, unique = true)
+    @GeneratedValue(generator = "users_id_seq")
+    @GenericGenerator(name = "users_id_seq", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator")
     private Long id;
 
     @Column(name = "login")
@@ -34,11 +35,4 @@ public class User {
     @JoinColumn(name = "id_extra_users_data", referencedColumnName = "id")
     private ExtraUserData extraUserData;
 
-    /*private String passportNumber;
-    private String name;
-    private String lastname;
-    private Date birthdate;
-    private String drivingLicense;
-    private String phone;
-    private Date registerDate;*/
 }

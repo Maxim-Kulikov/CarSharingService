@@ -3,10 +3,7 @@ package org.example.controller.rest;
 import lombok.AllArgsConstructor;
 import org.example.dto.userDTO.UserAuthorizeRequest;
 import org.example.dto.userDTO.UserExisted;
-import org.example.model.User;
 import org.example.service.UserService;
-import org.example.service.impl.RoleService;
-import org.example.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +22,19 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public UserExisted save(UserAuthorizeRequest dto){
+    public UserExisted save(@RequestBody UserAuthorizeRequest dto){
         return userService.save(dto);
     }
+
+    @DeleteMapping("/delete")
+    public void delete(@RequestBody UserExisted dto){
+        userService.delete(dto);
+    }
+
+    @PostMapping("/update")
+    public UserExisted update(@RequestBody UserExisted dto){
+        return userService.update(dto);
+    }
+
 
 }

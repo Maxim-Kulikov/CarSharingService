@@ -15,8 +15,9 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     User toUser(UserAuthorizeRequest dto);
-    @Mapping(target = "role.role", source = "role")
-    User toUser(UserExisted dto);
+    @Mapping(target = "role", source = "role")
+    @Mapping(target = "id", source = "dto.id")
+    User toUser(UserExisted dto, Role role);
 
     @Mapping(target = "role", source = "role.role")
     UserExisted toUserExisted(User user);
