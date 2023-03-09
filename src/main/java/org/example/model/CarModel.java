@@ -1,7 +1,9 @@
 package org.example.model;
 
-import jakarta.persistence.*;
+
 import lombok.*;
+
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -12,7 +14,7 @@ import lombok.*;
 @Builder
 
 @Entity
-@Table(name = "carsModels")
+@Table(name = "cars_models")
 public class CarModel {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -23,7 +25,7 @@ public class CarModel {
     private String model;
 
     @ManyToOne
-    @JoinColumn(name = "idMark", referencedColumnName = "id")
+    @JoinColumn(name = "id_mark", referencedColumnName = "id")
     private CarMark mark;
 }
 

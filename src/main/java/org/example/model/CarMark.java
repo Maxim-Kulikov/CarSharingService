@@ -1,7 +1,9 @@
 package org.example.model;
 
-import jakarta.persistence.*;
 import lombok.*;
+
+import javax.persistence.*;
+
 
 @Getter
 @Setter
@@ -12,7 +14,7 @@ import lombok.*;
 @Builder
 
 @Entity
-@Table(name = "carsMarks")
+@Table(name = "cars_marks")
 public class CarMark {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

@@ -1,7 +1,8 @@
 package org.example.model;
 
-import jakarta.persistence.*;
 import lombok.*;
+
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -20,10 +21,10 @@ public class Car {
     private Integer id;
 
     @OneToOne
-    @JoinColumn(name = "idModel", referencedColumnName = "id")
+    @JoinColumn(name = "id_model", referencedColumnName = "id")
     private CarModel carModel;
 
-    @Column(name = "carNumber")
+    @Column(name = "car_number")
     private String carNumber;
 
     @Column(name = "price")
@@ -32,6 +33,6 @@ public class Car {
     @Column(name = "limitations")
     private String limitations;
 
-    @Column(name = "idImage")
+    @Column(name = "id_image")
     private Integer idImage;
 }

@@ -1,7 +1,8 @@
 package org.example.model;
 
-import jakarta.persistence.*;
 import lombok.*;
+
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -26,11 +27,11 @@ public class User {
     private String password;
 
     @OneToOne//(cascade = CascadeType.)
-    @JoinColumn(name = "idRole", referencedColumnName = "id")
+    @JoinColumn(name = "id_role", referencedColumnName = "id")
     private Role role;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idExtraUsersData", referencedColumnName = "id")
+    @JoinColumn(name = "id_extra_users_data", referencedColumnName = "id")
     private ExtraUserData extraUserData;
 
     /*private String passportNumber;

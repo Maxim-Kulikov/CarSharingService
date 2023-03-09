@@ -1,8 +1,8 @@
 package org.example.model;
 
-import jakarta.persistence.*;
 import lombok.*;
 
+import javax.persistence.*;
 import java.sql.Date;
 
 @Getter
@@ -14,7 +14,7 @@ import java.sql.Date;
 @Builder
 
 @Entity
-@Table(name = "extraUsersData")
+@Table(name = "extra_users_data")
 public class ExtraUserData {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -33,12 +33,12 @@ public class ExtraUserData {
     @Column(name = "birthdate")
     private Date birthdate;
 
-    @Column(name = "drivingLicense")
+    @Column(name = "driving_license")
     private String drivingLicense;
 
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "registerDate")
+    @Column(name = "register_date")
     private Date registerDate;
 }

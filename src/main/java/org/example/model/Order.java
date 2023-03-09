@@ -1,7 +1,8 @@
 package org.example.model;
 
-import jakarta.persistence.*;
 import lombok.*;
+
+import javax.persistence.*;
 
 import java.sql.Date;
 
@@ -21,26 +22,26 @@ public class Order {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "startDate")
+    @Column(name = "start_date")
     private Date startDate;
 
-    @Column(name = "finishDate")
+    @Column(name = "finish_date")
     private Date finishDate;
 
     @Column(name = "status")
     private Boolean status;
 
     @OneToOne
-    @JoinColumn(name = "idCar", referencedColumnName = "id")
+    @JoinColumn(name = "id_car", referencedColumnName = "id")
     private Car car;
 
     @OneToOne
-    @JoinColumn(name = "idUser", referencedColumnName = "id")
+    @JoinColumn(name = "id_user", referencedColumnName = "id")
     private User user;
 
-    @Column(name = "adminLogin")
+    @Column(name = "admin_login")
     private String adminLogin;
 
-    @Column(name = "refuseReason")
+    @Column(name = "refuse_reason")
     private String refuseReason;
 }

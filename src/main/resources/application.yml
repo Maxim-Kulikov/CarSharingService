@@ -1,9 +1,13 @@
-server:
-  port: ${PORT:8080}
-
-db:
-  username: ${USERNAME:postgres}
-  password: ${PASSWORD:toor}
-  pool.size: ${POOL_SIZE:20}
-  driver-class-name: org.postgresql.Driver
-  url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:5432}/${DATABASE:postgres}
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        show-sql: true
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: toor
+  liquibase:
+    change-log:
