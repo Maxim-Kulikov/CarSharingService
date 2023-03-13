@@ -1,13 +1,15 @@
 spring:
+  application:
+    name: CarSharingService
   jpa:
     properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQL95Dialect
-        show-sql: true
+      show-sql: true
+      database-platform: org.hibernate.dialect.PostgreSQL95Dialect
   datasource:
     driverClassName: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: toor
+    pool.size: 20
   liquibase:
-    change-log:
+    change-log: db.changelog

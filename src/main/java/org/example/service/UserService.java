@@ -9,10 +9,10 @@ import java.util.List;
 @Service
 public interface UserService {
     List<UserExisted> getAll();
-    UserExisted save(UserAuthorizeRequest dto);
-    void delete(UserExisted dto);
-    UserExisted findByLogin(String login);
-    UserExisted update(UserExisted dto);
-    UserExisted authorize(UserAuthorizeRequest dto);
+    Long save(UserAuthorizeRequest dto);
+    void delete(Long id);
+    Long findByLogin(String login);
+    Long update(UserExisted dto);
+    Long authorize(UserAuthorizeRequest dto);
 
 }

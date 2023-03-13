@@ -18,7 +18,6 @@ public interface UserMapper {
     @Mapping(target = "role", source = "role")
     @Mapping(target = "id", source = "dto.id")
     User toUser(UserExisted dto, Role role);
-
     @Mapping(target = "role", source = "role.role")
     UserExisted toUserExisted(User user);
     List<UserExisted> toUserExistedList(List<User> users);

@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface UserDao extends CrudRepository<User, Long> {
     Optional<User> findFirstByLoginAndPassword(String login, String password);
     Optional<User> findFirstByLogin(String login);
+
+
 }

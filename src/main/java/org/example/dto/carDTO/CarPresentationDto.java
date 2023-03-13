@@ -1,4 +1,4 @@
-package org.example.dto;
+package org.example.dto.carDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

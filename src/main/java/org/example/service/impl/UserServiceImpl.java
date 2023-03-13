@@ -1,5 +1,6 @@
 package org.example.service.impl;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import org.example.dao.repository.RoleDao;
 import org.example.dao.repository.UserDao;
@@ -21,56 +22,63 @@ import java.util.Optional;
 @Service
 @Transactional
 @EqualsAndHashCode
+@AllArgsConstructor
 @ComponentScan("org.example")
 //@Getter  Не знаю, что лучше, использовать методы или использовать методы через геттер
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserDao userDao;
+    private final UserDao userDao;
     @Autowired
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
     @Autowired
-    private RoleDao roleDao;
+    private final RoleDao roleDao;
 
+    @Override
+    @Transactional
     public List<UserExisted> getAll(){
         return userMapper.toUserExistedList((List<User>) userDao.findAll());
     }
 
-    public UserExisted save(UserAuthorizeRequest dto){
+    @Override
+    @Transactional
+    public Long save(UserAuthorizeRequest dto){
         return Optional.ofNullable(dto)
                 .map(userMapper::toUser)
                 .map(this::setRole)
                 .map(this::setEmptyExtraUserData)
                 .map(userDao::save)
-                .map(userMapper::toUserExisted)
-                .orElseThrow(()->new RuntimeException("Can not save user!"));
-    }
-
-    public void delete(UserExisted dto){
-        userDao.deleteById(dto.getId());
+                .orElseThrow(() -> new RuntimeException("Could not save user!"))
+                .getId();
     }
 
     @Override
-    public UserExisted findByLogin(String login) {
-        return userMapper.toUserExisted(
-                userDao.findFirstByLogin(login).get()
-        );
+    public void delete(Long id){
+        userDao.deleteById(id);
     }
 
     @Override
-    public UserExisted update(UserExisted dto) {
+    @Transactional
+    public Long findByLogin(String login) {
+        return userDao.findFirstByLogin(login).get().getId();
+    }
+
+    @Override
+    @Transactional
+    public Long update(UserExisted dto) {
         User user = userDao.findById(dto.getId())
                 .orElseThrow(() -> new RuntimeException("Could not update user! Id does not exist!"));
         user.setLogin(dto.getLogin());
         userDao.save(user);
-        return userMapper.toUserExisted(user);
+        return user.getId();
     }
 
     @Override
-    public UserExisted authorize(UserAuthorizeRequest dto) {
+    @Transactional
+    public Long authorize(UserAuthorizeRequest dto) {
         User user = userMapper.toUser(dto);
         user = userDao.findFirstByLoginAndPassword(user.getLogin(), user.getPassword()).get();
-        return userMapper.toUserExisted(user);
+        return user.getId();
     }
 
     private User setRole(User user){

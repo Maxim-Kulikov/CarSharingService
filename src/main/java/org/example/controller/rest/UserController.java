@@ -22,17 +22,17 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public UserExisted save(@RequestBody UserAuthorizeRequest dto){
+    public Long save(@RequestBody UserAuthorizeRequest dto){
         return userService.save(dto);
     }
 
     @DeleteMapping("/delete")
-    public void delete(@RequestBody UserExisted dto){
-        userService.delete(dto);
+    public void delete(@RequestParam Long id){
+        userService.delete(id);
     }
 
     @PostMapping("/update")
-    public UserExisted update(@RequestBody UserExisted dto){
+    public Long update(@RequestBody UserExisted dto){
         return userService.update(dto);
     }
 
