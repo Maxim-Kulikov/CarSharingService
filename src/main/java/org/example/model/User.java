@@ -3,8 +3,12 @@ package org.example.model;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.mapping.Set;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 
 @Getter
@@ -16,7 +20,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "users")
-public class User {
+public class User /*implements UserDetails*/ {
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(generator = "users_id_seq")
@@ -37,8 +41,41 @@ public class User {
     @JoinColumn(name = "id_extra_users_data", referencedColumnName = "id")
     private ExtraUserData extraUserData;
 
-    /*@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Fetch(Fet)
-    private List<Order> orders;*/
+    /*@ManyToMany(fetch = FetchType.EAGER)
+    private Set<Role> roles;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    *//*@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Fetch(Fet)
+    private List<Order> orders;*//*
+*/
 }

@@ -46,4 +46,7 @@ public class Order {
 
     @Column(name = "refuse_reason")
     private String refuseReason;
+
+    @Column(name = "price")
+    private Long price;
 }

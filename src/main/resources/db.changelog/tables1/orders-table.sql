@@ -11,3 +11,5 @@ CREATE TABLE IF NOT EXISTS orders
     FOREIGN KEY (id_car) REFERENCES cars (id),
     FOREIGN KEY (id_user) REFERENCES users (id)
     );
+
+ALTER TABLE orders ADD COLUMN price BIGINT not null

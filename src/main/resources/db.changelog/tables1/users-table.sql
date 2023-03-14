@@ -8,3 +8,4 @@ CREATE TABLE IF NOT EXISTS users
     FOREIGN KEY (id_role) REFERENCES roles (id),
     FOREIGN KEY (id_extra_users_data) REFERENCES extra_users_data (id)
     );
+
