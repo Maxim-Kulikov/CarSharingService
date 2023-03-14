@@ -11,4 +11,5 @@ public interface ExtraUserDataService {
     List<ExtraUserDataResponse> getAll();
     Long update(ExtraUserDataResponse dto);
     ExtraUserDataResponse get(Long id);
+
 }

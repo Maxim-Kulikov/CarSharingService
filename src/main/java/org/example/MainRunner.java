@@ -1,7 +1,6 @@
 package org.example;
 
 
-import org.example.config.DataSourceConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

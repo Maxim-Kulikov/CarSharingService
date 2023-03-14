@@ -3,7 +3,7 @@ package org.example.service.impl;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import org.example.dao.repository.RoleDao;
-import org.example.dao.repository.UserDao;
+import org.example.dao.repository.user.UserDao;
 import org.example.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;

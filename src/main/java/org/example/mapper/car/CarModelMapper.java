@@ -1,4 +1,4 @@
-package org.example.mapper;
+package org.example.mapper.car;
 
 import org.example.model.CarMark;
 import org.example.model.CarModel;

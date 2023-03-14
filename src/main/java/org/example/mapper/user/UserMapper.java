@@ -1,4 +1,4 @@
-package org.example.mapper;
+package org.example.mapper.user;
 
 import org.example.dto.roleDTO.RoleResponse;
 import org.example.dto.userDTO.UserAuthorizeRequest;

@@ -1,4 +1,4 @@
-package org.example.dao.repository;
+package org.example.dao.repository.car;
 
 import org.example.model.Car;
 import org.springframework.data.repository.CrudRepository;

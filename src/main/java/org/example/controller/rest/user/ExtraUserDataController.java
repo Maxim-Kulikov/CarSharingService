@@ -1,4 +1,4 @@
-package org.example.controller.rest;
+package org.example.controller.rest.user;
 
 import lombok.AllArgsConstructor;
 import org.example.dto.userDTO.ExtraUserDataResponse;
@@ -21,8 +21,8 @@ public class ExtraUserDataController {
         return extraUserDataService.update(dto);
     }
 
-    @GetMapping("/get")
-    public ExtraUserDataResponse get(@RequestParam Long id){
+    @GetMapping("/get/{id}")
+    public ExtraUserDataResponse get(@PathVariable Long id){
         return extraUserDataService.get(id);
     }
 

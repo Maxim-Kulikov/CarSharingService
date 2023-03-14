@@ -1,9 +1,11 @@
 package org.example.model;
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,12 +29,16 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @OneToOne//(cascade = CascadeType.)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_role", referencedColumnName = "id")
     private Role role;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_extra_users_data", referencedColumnName = "id")
     private ExtraUserData extraUserData;
+
+    /*@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Fetch(Fet)
+    private List<Order> orders;*/
 
 }

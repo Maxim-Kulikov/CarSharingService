@@ -2,9 +2,9 @@ package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import org.example.dao.repository.ExtraUserDao;
+import org.example.dao.repository.user.ExtraUserDao;
 import org.example.dto.userDTO.ExtraUserDataResponse;
-import org.example.mapper.ExtraUserDataMapper;
+import org.example.mapper.user.ExtraUserDataMapper;
 import org.example.model.ExtraUserData;
 import org.example.service.ExtraUserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Field;
 import java.util.List;
 @Service
 @Transactional

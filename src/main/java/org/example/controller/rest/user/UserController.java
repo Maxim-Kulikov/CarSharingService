@@ -1,4 +1,4 @@
-package org.example.controller.rest;
+package org.example.controller.rest.user;
 
 import lombok.AllArgsConstructor;
 import org.example.dto.userDTO.UserAuthorizeRequest;
