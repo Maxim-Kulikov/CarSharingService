@@ -14,6 +14,6 @@ public interface UserService {
     void delete(Long id);
     UserExistedResp findByLogin(String login);
     UserExistedResp update(UserUpdateReq dto, Long id);
-    Long authorize(UserAuthorizeReq dto);
+    UserExistedResp authorize(UserAuthorizeReq dto);
 
 }

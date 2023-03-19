@@ -87,11 +87,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Long authorize(UserAuthorizeReq dto) {
+    public UserExistedResp authorize(UserAuthorizeReq dto) {
         User user = userMapper.toUser(dto);
         user = userDao.findFirstByLoginAndPassword(user.getLogin(), user.getPassword())
                 .orElseThrow(() -> new RuntimeException("This user does not exist!"));
-        return user.getId();
+        return userMapper.toUserExistedResp(user);
     }
 
     private User setRole(User user){

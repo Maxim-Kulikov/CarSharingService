@@ -76,18 +76,13 @@ class UserServiceImplTest {
 
     @Test
     void save() {
-        User user = getUser().get();
-
-        UserExistedResp userExistedResp = getUserExistedResp().get();
-        UserAuthorizeReq userAuthorizeReq = getUserAuthorizeReq().get();
-
         when(roleDao.findFirstByRole(ROLE_USER)).thenReturn(getRole());
-        when(userMapper.toUser(userAuthorizeReq)).thenReturn(user);
-        when(userMapper.toUserExistedResp(user)).thenReturn(userExistedResp);
-        when(userDao.save(user)).thenReturn(user);
+        when(userMapper.toUser(userAuthorizeReq.get())).thenReturn(user.get());
+        when(userMapper.toUserExistedResp(user.get())).thenReturn(userExistedResp.get());
+        when(userDao.save(user.get())).thenReturn(user.get());
 
-        UserExistedResp expected = userMapper.toUserExistedResp(user);
-        UserExistedResp result = userService.save(userAuthorizeReq);
+        UserExistedResp expected = userMapper.toUserExistedResp(user.get());
+        UserExistedResp result = userService.save(userAuthorizeReq.get());
 
         assertAll(() -> {
                     assertNotNull(result);
@@ -135,6 +130,19 @@ class UserServiceImplTest {
 
     @Test
     void authorize() {
+        when(userMapper.toUser(userAuthorizeReq.get())).thenReturn(user.get());
+        when(userDao.findFirstByLoginAndPassword(user.get().getLogin(), user.get().getPassword()))
+                .thenReturn(user);
+        when(userMapper.toUserExistedResp(user.get())).thenReturn(userExistedResp.get());
+
+        UserExistedResp expected = userExistedResp.get();
+        UserExistedResp result = userService.authorize(userAuthorizeReq.get());
+
+        assertAll(() -> {
+                    assertNotNull(result);
+                    assertEquals(result, expected);
+        }
+        );
     }
 
     private Optional<User> getUser(){
