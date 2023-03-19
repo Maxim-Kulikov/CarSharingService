@@ -1,13 +1,13 @@
 package org.example.controller.rest.user;
 
 import lombok.AllArgsConstructor;
-import org.example.dto.userDTO.ExtraUserDataResponse;
+import org.example.dto.userDTO.ExtraUserDataResp;
+import org.example.dto.userDTO.ExtraUserDataUpdateReq;
 import org.example.service.ExtraUserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @AllArgsConstructor
@@ -16,18 +16,18 @@ public class ExtraUserDataController {
     @Autowired
     private final ExtraUserDataService extraUserDataService;
 
-    @GetMapping("/update")
-    public Long update(@RequestBody ExtraUserDataResponse dto){
-        return extraUserDataService.update(dto);
+    @GetMapping("/update/{id}")
+    public ExtraUserDataResp update(@RequestBody ExtraUserDataUpdateReq dto, @PathVariable Long id){
+        return extraUserDataService.update(dto, id);
     }
 
     @GetMapping("/get/{id}")
-    public ExtraUserDataResponse get(@PathVariable Long id){
+    public ExtraUserDataResp get(@PathVariable Long id){
         return extraUserDataService.get(id);
     }
 
     @GetMapping("/get/all")
-    public List<ExtraUserDataResponse> getAll(){
+    public List<ExtraUserDataResp> getAll(){
         return extraUserDataService.getAll();
     }
 }

@@ -1,11 +1,11 @@
 package org.example.controller.rest.car;
 
 import lombok.AllArgsConstructor;
-import org.example.dto.carDTO.CarDescriptionDto;
-import org.example.dto.carDTO.CarPresentationDto;
-import org.example.dto.carDTO.CarCreationDto;
+import org.example.dto.carDTO.CarDescriptionResp;
+import org.example.dto.carDTO.CarInfoResp;
+import org.example.dto.carDTO.CarCreateReq;
+import org.example.dto.carDTO.CarUpdateReq;
 import org.example.service.CarService;
-import org.example.service.impl.CarServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,33 +19,33 @@ public class CarController {
     private final CarService carService;
 
     @GetMapping("/get/description/{id}")
-    public CarDescriptionDto getDescription(@PathVariable Integer id){
+    public CarDescriptionResp getDescription(@PathVariable Integer id){
         return carService.getCarDescription(id);
     }
 
     @GetMapping("/get/description")
-    public CarDescriptionDto getDescription(@RequestBody CarPresentationDto dto){
+    public CarDescriptionResp getDescription(@RequestBody CarInfoResp dto){
         return carService.getCarDescription(dto);
     }
 
     @GetMapping("/get/presentation/all")
-    public List<CarPresentationDto> getAllPresentation(){
+    public List<CarInfoResp> getAllPresentation(){
         return carService.getAllCarsPresentation();
     }
 
     @GetMapping("/get/description/all")
-    public List<CarDescriptionDto> getAllDescription(){
+    public List<CarDescriptionResp> getAllDescription(){
         return carService.getAllCarsDescription();
     }
 
     @PostMapping("/save")
-    public Integer save(@RequestBody CarCreationDto dto){
+    public CarDescriptionResp save(@RequestBody CarCreateReq dto){
         return carService.save(dto);
     }
 
-    @PatchMapping("/update")
-    public Integer update(@RequestBody CarDescriptionDto dto){
-        return carService.update(dto);
+    @PatchMapping("/update/{id}")
+    public CarDescriptionResp update(@RequestBody CarUpdateReq dto, @PathVariable Integer id){
+        return carService.update(dto, id);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -54,22 +54,22 @@ public class CarController {
     }
 
     @GetMapping("/get/presentation/{id}")
-    public CarPresentationDto getPresentation(@PathVariable Integer id){
+    public CarInfoResp getPresentation(@PathVariable Integer id){
         return carService.getCarPresentation(id);
     }
 
     @GetMapping("/get/presentation/all/{mark}")
-    public List<CarPresentationDto> getAllPresentationByMark(@PathVariable String mark){
+    public List<CarInfoResp> getAllPresentationByMark(@PathVariable String mark){
         return carService.getAllCarsPresentationByMark(mark);
     }
 
     @GetMapping("/get/presentation/all/{model}")
-    public List<CarPresentationDto> getAllPresentationByModel(@PathVariable String model){
+    public List<CarInfoResp> getAllPresentationByModel(@PathVariable String model){
         return carService.getAllCarsPresentationByModel(model);
     }
 
     @GetMapping("/get/presentation/all/mark_and_model")
-    public List<CarPresentationDto> getAllPresentation(@RequestParam String mark, @RequestParam String model){
+    public List<CarInfoResp> getAllPresentation(@RequestParam String mark, @RequestParam String model){
         return carService.getAllCarsPresentationByMarkAndModel(mark, model);
     }
 }

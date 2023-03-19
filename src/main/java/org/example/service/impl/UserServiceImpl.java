@@ -4,8 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import org.example.dao.repository.RoleDao;
 import org.example.dao.repository.user.UserDao;
-import org.example.dto.userDTO.UserAuthorizeRequest;
-import org.example.dto.userDTO.UserExisted;
+import org.example.dto.userDTO.UserAuthorizeReq;
+import org.example.dto.userDTO.UserExistedResp;
+import org.example.dto.userDTO.UserUpdateReq;
 import org.example.mapper.user.UserMapper;
 import org.example.model.ExtraUserData;
 import org.example.model.Role;
@@ -27,6 +28,8 @@ import java.util.Optional;
 //@Getter  Не знаю, что лучше, использовать методы или использовать методы через геттер
 public class UserServiceImpl implements UserService {
 
+    private final String ROLE_USER = "ROLE_USER";
+    private final String ROLE_ADMIN = "ROLE_ADMIN";
     @Autowired
     private final UserDao userDao;
     @Autowired
@@ -36,22 +39,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public List<UserExisted> getAll(){
+    public List<UserExistedResp> getAll(){
         return userMapper.toUserExistedList((List<User>) userDao.findAll());
     }
 
     @Override
     @Transactional
-    public Long save(UserAuthorizeRequest dto){
+    public UserExistedResp save(UserAuthorizeReq dto){
         return Optional.ofNullable(dto)
                 .map(userMapper::toUser)
                 .map(this::setRole)
                 .map(this::setEmptyExtraUserData)
                 .map(userDao::save)
-                .orElseThrow(() -> new RuntimeException("Could not save user!"))
-                .getId();
+                .map(userMapper::toUserExistedResp)
+                .orElseThrow(() -> new RuntimeException("Could not save user!"));
+
     }
 
+    @Transactional
     @Override
     public void delete(Long id){
         userDao.deleteById(id);
@@ -59,30 +64,38 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Long findByLogin(String login) {
-        return userDao.findFirstByLogin(login).get().getId();
+    public UserExistedResp findByLogin(String login) {
+     /*   return userMapper.toUserExistedResp(
+                userDao.findFirstByLogin(login)
+                .orElseThrow(() -> new RuntimeException("Could find user by this login!"))
+        );*/
+        return Optional.ofNullable(userDao.findFirstByLogin(login))
+                .orElseThrow(() -> new RuntimeException("Could not find user!"))
+                .map(userMapper::toUserExistedResp)
+                .get();
     }
 
     @Override
     @Transactional
-    public Long update(UserExisted dto) {
-        User user = userDao.findById(dto.getId())
+    public UserExistedResp update(UserUpdateReq dto, Long id) {
+        User user = userDao.findById(id)
                 .orElseThrow(() -> new RuntimeException("Could not update user! Id does not exist!"));
-        user.setLogin(dto.getLogin());
+        user = updateUser1(user, dto);
         userDao.save(user);
-        return user.getId();
+        return userMapper.toUserExistedResp(user);
     }
 
     @Override
     @Transactional
-    public Long authorize(UserAuthorizeRequest dto) {
+    public Long authorize(UserAuthorizeReq dto) {
         User user = userMapper.toUser(dto);
-        user = userDao.findFirstByLoginAndPassword(user.getLogin(), user.getPassword()).get();
+        user = userDao.findFirstByLoginAndPassword(user.getLogin(), user.getPassword())
+                .orElseThrow(() -> new RuntimeException("This user does not exist!"));
         return user.getId();
     }
 
     private User setRole(User user){
-        user.setRole(findRole("user"));
+        user.setRole(findRole(ROLE_USER));
         return user;
     }
 
@@ -92,8 +105,28 @@ public class UserServiceImpl implements UserService {
     }
 
     private Role findRole(String role){
-        return roleDao.findFirstByRole(role).get();
+        return roleDao.findFirstByRole(role)
+                .orElseThrow(() -> new RuntimeException("Could not find this role!"));
     }
 
+    public User updateUser(User model, UserUpdateReq dto){
+        return User.builder()
+                .id(model.getId())
+                .login(dto.getLogin().equals(model.getLogin()) || dto.getLogin().isEmpty()
+                        ? model.getLogin() : dto.getLogin())
+                .password(model.getPassword())
+                .build();
+    }
+
+    public User updateUser1(User model, UserUpdateReq dto){
+        return model.changer()
+                .id(model.getId())
+                .login(dto.getLogin().equals(model.getLogin()) || dto.getLogin().isEmpty()
+                        ? model.getLogin() : dto.getLogin())
+                .password(model.getLogin())
+                .role(model.getRole())
+                .extraUserData(model.getExtraUserData())
+                .change();
+    }
 
 }

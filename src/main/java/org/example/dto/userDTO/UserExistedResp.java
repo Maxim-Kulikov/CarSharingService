@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserUpdate {
+public class UserExistedResp {
     private Long id;
     private String login;
-    private String password;
+    private String role;
 }

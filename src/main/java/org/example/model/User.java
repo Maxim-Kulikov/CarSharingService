@@ -3,9 +3,6 @@ package org.example.model;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.mapping.Set;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -78,4 +75,40 @@ public class User /*implements UserDetails*/ {
     @Fetch(Fet)
     private List<Order> orders;*//*
 */
+
+    public Changer changer(){
+        return new Changer();
+    }
+
+    public class Changer{
+        public Changer id(Long id){
+            User.this.id = id;
+            return this;
+        }
+
+        public Changer login(String login){
+            User.this.login = login;
+            return this;
+        }
+
+        public Changer password(String password){
+            User.this.password = password;
+            return this;
+        }
+
+        public Changer role(Role role){
+            User.this.role = role;
+            return this;
+        }
+
+        public Changer extraUserData(ExtraUserData extraUserData){
+            User.this.extraUserData = extraUserData;
+            return this;
+        }
+
+        public User change(){
+            return User.this;
+        }
+
+    }
 }

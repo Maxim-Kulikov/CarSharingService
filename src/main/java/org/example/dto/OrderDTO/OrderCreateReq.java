@@ -11,9 +11,10 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderCreationRequest {
+//TODO убрать idCar и idUser, сделать как отдельный параметр в контроллере
+public class OrderCreateReq {
     private Date startDate;
     private Date finishDate;
-    private Integer idCar;
-    private Long idUser;
+//    private Integer idCar;
+//    private Long idUser;
 }

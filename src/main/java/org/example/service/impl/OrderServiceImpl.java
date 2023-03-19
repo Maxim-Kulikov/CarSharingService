@@ -5,8 +5,8 @@ import lombok.EqualsAndHashCode;
 import org.example.dao.repository.OrderDao;
 import org.example.dao.repository.car.CarDao;
 import org.example.dao.repository.user.UserDao;
-import org.example.dto.OrderDTO.OrderCreationRequest;
-import org.example.dto.OrderDTO.OrderResponse;
+import org.example.dto.OrderDTO.OrderCreateReq;
+import org.example.dto.OrderDTO.OrderResp;
 import org.example.mapper.OrderMapper;
 import org.example.model.Car;
 import org.example.model.Order;
@@ -17,7 +17,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,34 +38,36 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public List<OrderResponse> getAll() {
+    public List<OrderResp> getAll() {
         return orderMapper.toListOrderCreationResponses(
                 (List<Order>) orderDao.findAll()
         );
     }
 
     @Override
-    public List<OrderResponse> getAllAllowed(Boolean status) {
+    public List<OrderResp> getAllAllowed(Boolean status) {
         return orderMapper.toListOrderCreationResponses(
                 orderDao.findAllByStatusIs(status)
         );
     }
 
     @Override
-    public Long save(OrderCreationRequest dto) {
-        Optional<User> user = userDao.findById(dto.getIdUser());
-        Optional<Car> car = carDao.findById(dto.getIdCar());
-        Order order = orderMapper.toOrder(dto, user.get(), car.get());
+    public OrderResp save(OrderCreateReq dto, Long idUser, Integer idCar) {
+        User user = userDao.findById(idUser)
+                .orElseThrow(() -> new RuntimeException("Could not find user by this id!"));
+        Car car = carDao.findById(idCar)
+                .orElseThrow(() -> new RuntimeException("Could not find car by this id!"));
+        Order order = orderMapper.toOrder(dto, user, car);
         Long difference = (dto.getFinishDate().getTime()-dto.getStartDate().getTime())/(24*60*60*1000);
-        Long price = car.get().getPrice()*difference;
+        Long price = car.getPrice()*difference;
         order.setPrice(price);
         order.setStatus(false);
         orderDao.save(order);
-        return order.getId();
+        return orderMapper.toOrderResp(order);
     }
 
     @Override
-    public Long update(OrderResponse dto) {
+    public Long update(OrderResp dto) {
         return null;
     }
 
@@ -77,8 +78,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Long allowOrder(Long idOrder, Long idAdmin, Boolean status) {
-        User admin = userDao.findById(idAdmin).get();
-        Order order = orderDao.findById(idOrder).get();
+        User admin = userDao.findById(idAdmin)
+                .orElseThrow(() -> new RuntimeException("Could not find admin by this id!"));
+        Order order = orderDao.findById(idOrder)
+                .orElseThrow(() -> new RuntimeException("Could not find order by this order!"));
         order.setAdminLogin(admin.getLogin());
         order.setStatus(status);
         orderDao.save(order);

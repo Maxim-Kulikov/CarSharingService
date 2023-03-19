@@ -11,7 +11,7 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderResponse {
+public class OrderResp {
     private Long id;
     private Date startDate;
     private Date finishDate;

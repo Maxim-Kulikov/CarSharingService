@@ -1,14 +1,17 @@
 package org.example.mapper.user;
 
-import org.example.dto.userDTO.ExtraUserDataResponse;
+import org.example.dto.userDTO.ExtraUserDataResp;
 import org.example.model.ExtraUserData;
 import org.mapstruct.Mapper;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper(componentModel = "spring")
 public interface ExtraUserDataMapper {
-    ExtraUserDataResponse toExtraUserDataResponse(ExtraUserData extraUserData);
-    ExtraUserData toExtraUserData(ExtraUserDataResponse extraUserDataResponse);
-    List<ExtraUserDataResponse> toExtraUserDataResponseList(List<ExtraUserData> extraUserData);
+    ExtraUserDataResp toExtraUserDataResponse(ExtraUserData extraUserData);
+    ExtraUserData toExtraUserData(ExtraUserDataResp extraUserDataResp);
+    List<ExtraUserDataResp> toExtraUserDataResponseList(List<ExtraUserData> extraUserData);
+
+
 }

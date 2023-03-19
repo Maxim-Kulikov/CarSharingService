@@ -1,18 +1,19 @@
 package org.example.service;
 
-import org.example.dto.userDTO.UserAuthorizeRequest;
-import org.example.dto.userDTO.UserExisted;
+import org.example.dto.userDTO.UserAuthorizeReq;
+import org.example.dto.userDTO.UserExistedResp;
+import org.example.dto.userDTO.UserUpdateReq;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public interface UserService {
-    List<UserExisted> getAll();
-    Long save(UserAuthorizeRequest dto);
+    List<UserExistedResp> getAll();
+    UserExistedResp save(UserAuthorizeReq dto);
     void delete(Long id);
-    Long findByLogin(String login);
-    Long update(UserExisted dto);
-    Long authorize(UserAuthorizeRequest dto);
+    UserExistedResp findByLogin(String login);
+    UserExistedResp update(UserUpdateReq dto, Long id);
+    Long authorize(UserAuthorizeReq dto);
 
 }

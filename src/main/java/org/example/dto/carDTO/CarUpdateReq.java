@@ -9,9 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CarPresentationDto {
-    private Integer id;
+
+public class CarUpdateReq {
     private String mark;
     private String model;
+    private String carNumber;
+    private Integer price;
+    private String limitations;
     private Integer idImage;
 }

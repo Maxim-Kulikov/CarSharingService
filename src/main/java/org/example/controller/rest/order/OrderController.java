@@ -1,8 +1,8 @@
 package org.example.controller.rest.order;
 
 import lombok.AllArgsConstructor;
-import org.example.dto.OrderDTO.OrderCreationRequest;
-import org.example.dto.OrderDTO.OrderResponse;
+import org.example.dto.OrderDTO.OrderCreateReq;
+import org.example.dto.OrderDTO.OrderResp;
 import org.example.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,18 +17,18 @@ public class OrderController {
     private final OrderService orderService;
 
     @RequestMapping("/get/all")
-    public List<OrderResponse> getAll(){
+    public List<OrderResp> getAll(){
         return orderService.getAll();
     }
 
     @RequestMapping("/get/all/{status}")
-    public List<OrderResponse> getAll(@PathVariable Boolean status){
+    public List<OrderResp> getAll(@PathVariable Boolean status){
         return orderService.getAllAllowed(status);
     }
 
-    @PostMapping("/save")
-    public Long save(@RequestBody OrderCreationRequest dto){
-        return orderService.save(dto);
+    @PostMapping("/save/{idUser}/{idCar}")
+    public OrderResp save(@RequestBody OrderCreateReq dto, @PathVariable Long idUser, @PathVariable Integer idCar){
+        return orderService.save(dto, idUser, idCar);
     }
 
     @PatchMapping("/allow")

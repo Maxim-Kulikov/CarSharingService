@@ -1,4 +1,4 @@
-package org.example.dto.roleDTO;
+package org.example.dto.userDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,9 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class RoleResponse {
-    private String role;
+public class UserAuthorizeReq {
+    private String login;
+    private String password;
 }

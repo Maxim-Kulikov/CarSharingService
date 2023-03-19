@@ -1,7 +1,7 @@
 package org.example.service;
 
-import org.example.dto.OrderDTO.OrderCreationRequest;
-import org.example.dto.OrderDTO.OrderResponse;
+import org.example.dto.OrderDTO.OrderCreateReq;
+import org.example.dto.OrderDTO.OrderResp;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,13 +10,13 @@ import java.util.List;
 @Service
 public interface OrderService {
     @Transactional
-    List<OrderResponse> getAll();
+    List<OrderResp> getAll();
     @Transactional
-    List<OrderResponse> getAllAllowed(Boolean status);
+    List<OrderResp> getAllAllowed(Boolean status);
     @Transactional
-    Long save(OrderCreationRequest dto);
+    OrderResp save(OrderCreateReq dto, Long idUser, Integer idCar);
     @Transactional
-    Long update(OrderResponse dto);
+    Long update(OrderResp dto);
     @Transactional
     void delete(Long id);
     @Transactional

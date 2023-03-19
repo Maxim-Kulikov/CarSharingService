@@ -4,17 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.model.CarModel;
-
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CarDescriptionDto {
+public class CarDescriptionResp {
     private Integer id;
     private String mark;
     private String model;

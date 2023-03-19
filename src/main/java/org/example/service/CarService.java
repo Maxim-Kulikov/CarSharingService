@@ -1,33 +1,34 @@
 package org.example.service;
 
-import org.example.dto.carDTO.CarCreationDto;
-import org.example.dto.carDTO.CarDescriptionDto;
-import org.example.dto.carDTO.CarPresentationDto;
+import org.example.dto.carDTO.CarCreateReq;
+import org.example.dto.carDTO.CarDescriptionResp;
+import org.example.dto.carDTO.CarInfoResp;
+import org.example.dto.carDTO.CarUpdateReq;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface CarService {
     @Transactional
-    CarPresentationDto getCarPresentation(Integer id);
+    CarInfoResp getCarPresentation(Integer id);
     @Transactional
-    List<CarPresentationDto> getAllCarsPresentation();
+    List<CarInfoResp> getAllCarsPresentation();
     @Transactional
-    List<CarPresentationDto> getAllCarsPresentationByMark(String mark);
+    List<CarInfoResp> getAllCarsPresentationByMark(String mark);
     @Transactional
-    List<CarPresentationDto> getAllCarsPresentationByModel(String model);
+    List<CarInfoResp> getAllCarsPresentationByModel(String model);
     @Transactional
-    List<CarPresentationDto> getAllCarsPresentationByMarkAndModel(String mark, String model);
+    List<CarInfoResp> getAllCarsPresentationByMarkAndModel(String mark, String model);
     @Transactional
-    List<CarDescriptionDto> getAllCarsDescription();
+    List<CarDescriptionResp> getAllCarsDescription();
     @Transactional
-    CarDescriptionDto getCarDescription(Integer id);
+    CarDescriptionResp getCarDescription(Integer id);
     @Transactional
-    CarDescriptionDto getCarDescription(CarPresentationDto dto);
+    CarDescriptionResp getCarDescription(CarInfoResp dto);
     @Transactional
-    Integer update(CarDescriptionDto dto);
+    CarDescriptionResp update(CarUpdateReq dto, Integer id);
     @Transactional
-    Integer save(CarCreationDto dto);
+    CarDescriptionResp save(CarCreateReq dto);
     @Transactional
     void delete(Integer id);
 }

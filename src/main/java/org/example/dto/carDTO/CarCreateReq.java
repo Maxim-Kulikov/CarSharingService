@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CarCreationDto {
+public class CarCreateReq {
     private String mark;
     private String model;
     private Integer price;

@@ -1,8 +1,9 @@
 package org.example.controller.rest.user;
 
 import lombok.AllArgsConstructor;
-import org.example.dto.userDTO.UserAuthorizeRequest;
-import org.example.dto.userDTO.UserExisted;
+import org.example.dto.userDTO.UserAuthorizeReq;
+import org.example.dto.userDTO.UserExistedResp;
+import org.example.dto.userDTO.UserUpdateReq;
 import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +18,12 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/all")
-    public List<UserExisted> getAllUsers(){
+    public List<UserExistedResp> getAllUsers(){
         return userService.getAll();
     }
 
     @PostMapping("/save")
-    public Long save(@RequestBody UserAuthorizeRequest dto){
+    public UserExistedResp save(@RequestBody UserAuthorizeReq dto){
         return userService.save(dto);
     }
 
@@ -31,9 +32,9 @@ public class UserController {
         userService.delete(id);
     }
 
-    @PostMapping("/update")
-    public Long update(@RequestBody UserExisted dto){
-        return userService.update(dto);
+    @PostMapping("/update/{id}")
+    public UserExistedResp update(@RequestBody UserUpdateReq dto, @PathVariable Long id){
+        return userService.update(dto, id);
     }
 
 

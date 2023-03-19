@@ -1,17 +1,14 @@
-package org.example.dto.userDTO;
+package org.example.dto.roleDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.dto.roleDTO.RoleResponse;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class UserExisted {
-    private Long id;
-    private String login;
+public class RoleResp {
     private String role;
 }

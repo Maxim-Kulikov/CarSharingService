@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserAuthorizeRequest {
+//TODO убрать id и добавить отдельным параметром в контроллер
+public class UserUpdateReq {
+    //private Long id;
     private String login;
     private String password;
 }

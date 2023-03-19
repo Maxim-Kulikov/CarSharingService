@@ -4,9 +4,10 @@ import lombok.AllArgsConstructor;
 import org.example.dao.repository.car.CarDao;
 import org.example.dao.repository.car.CarMarkDao;
 import org.example.dao.repository.car.CarModelDao;
-import org.example.dto.carDTO.CarDescriptionDto;
-import org.example.dto.carDTO.CarPresentationDto;
-import org.example.dto.carDTO.CarCreationDto;
+import org.example.dto.carDTO.CarCreateReq;
+import org.example.dto.carDTO.CarDescriptionResp;
+import org.example.dto.carDTO.CarInfoResp;
+import org.example.dto.carDTO.CarUpdateReq;
 import org.example.mapper.car.CarMapper;
 import org.example.mapper.car.CarMarkMapper;
 import org.example.mapper.car.CarModelMapper;
@@ -42,40 +43,44 @@ public class CarServiceImpl implements CarService {
 
     @Transactional
     @Override
-    public CarPresentationDto getCarPresentation(Integer id){
+    public CarInfoResp getCarPresentation(Integer id){
         return carMapper.toCarPresentationDto(
-                carDao.findFirstById(id).get()
+                carDao.findFirstById(id).
+                        orElseThrow(() -> new RuntimeException("Could not find car by this id!"))
         );
     }
 
     @Transactional
     @Override
-    public CarDescriptionDto getCarDescription(CarPresentationDto dto){
-        Optional<Car> car = carDao.findFirstById(dto.getId());
-        return carMapper.toCarDescriptionDto(car.get());
+    public CarDescriptionResp getCarDescription(CarInfoResp dto){
+        Car car = carDao.findFirstById(dto.getId()).orElseThrow(() -> new RuntimeException("Could not find car by this dto!"));
+        return carMapper.toCarDescriptionResp(car);
     }
 
+    @Transactional
     @Override
-    public Integer update(CarDescriptionDto dto) {
-        String mark = dto.getMark(),
-                model = dto.getModel();
-        CarModel carModel = ifNotExistsSaveElseGetExisted(mark, model);
-        Car car = carMapper.toCar(dto, carModel);
+    public CarDescriptionResp update(CarUpdateReq dto, Integer id) {
+        Car car = carDao.findFirstById(id)
+                .orElseThrow(() -> new RuntimeException("Could not find car by this id!"));
+        CarModel carModel = saveOrGetExisted(dto.getMark(), dto.getModel());
 
+        car = updateCar(dto, car, carModel);
         carDao.save(car);
-        return car.getId();
+
+        return carMapper.toCarDescriptionResp(car);
     }
 
     @Transactional
     @Override
-    public CarDescriptionDto getCarDescription(Integer id){
-        Optional<Car> car = carDao.findFirstById(id);
-        return carMapper.toCarDescriptionDto(car.get());
+    public CarDescriptionResp getCarDescription(Integer id){
+        Car car = carDao.findFirstById(id)
+                .orElseThrow(() -> new RuntimeException("Could not find car by this id!"));
+        return carMapper.toCarDescriptionResp(car);
     }
 
     @Transactional
     @Override
-    public List<CarPresentationDto> getAllCarsPresentation(){
+    public List<CarInfoResp> getAllCarsPresentation(){
         return carMapper.toListCarPresentation(
                 (List<Car>) carDao.findAll()
         );
@@ -83,7 +88,7 @@ public class CarServiceImpl implements CarService {
 
     @Transactional
     @Override
-    public List<CarPresentationDto> getAllCarsPresentationByMark(String mark){
+    public List<CarInfoResp> getAllCarsPresentationByMark(String mark){
         return Stream.of(carDao.findAllByCarModel_Mark_Mark(mark))
                 .map(car -> carMapper.toCarPresentationDto((Car) car))
                 .toList();
@@ -91,7 +96,7 @@ public class CarServiceImpl implements CarService {
 
     @Transactional
     @Override
-    public List<CarPresentationDto> getAllCarsPresentationByModel(String model){
+    public List<CarInfoResp> getAllCarsPresentationByModel(String model){
         return Stream.of(carDao.findAllByCarModel_Model(model))
                 .map(car -> carMapper.toCarPresentationDto((Car) car))
                 .toList();
@@ -99,27 +104,28 @@ public class CarServiceImpl implements CarService {
 
     @Transactional
     @Override
-    public List<CarPresentationDto> getAllCarsPresentationByMarkAndModel(String mark, String model){
+    public List<CarInfoResp> getAllCarsPresentationByMarkAndModel(String mark, String model){
         return carMapper.toListCarPresentation(
                 carDao.findAllByCarModel_ModelAndCarModel_Mark_Mark(model, mark)
         );
     }
 
+    @Transactional
     @Override
-    public List<CarDescriptionDto> getAllCarsDescription() {
+    public List<CarDescriptionResp> getAllCarsDescription() {
         return carMapper.toListCarDescription((List<Car>) carDao.findAll());
     }
 
     @Transactional
     @Override
-    public Integer save(CarCreationDto dto){
+    public CarDescriptionResp save(CarCreateReq dto){
         String mark = dto.getMark(),
                 model = dto.getModel();
-        CarModel carModel = ifNotExistsSaveElseGetExisted(mark, model);
+        CarModel carModel = saveOrGetExisted(mark, model);
         Car car = carMapper.toCar(dto, carModel);
 
         carDao.save(car);
-        return car.getId();
+        return carMapper.toCarDescriptionResp(car);
     }
 
     @Transactional
@@ -128,7 +134,10 @@ public class CarServiceImpl implements CarService {
         carDao.deleteById(id);
     }
 
-    private CarModel ifNotExistsSaveElseGetExisted(String mark, String model){
+    private CarModel saveOrGetExisted(String mark, String model){
+        if(mark == null || model == null)
+            return null;
+
         CarMark carMark = null;
         CarModel carModel = null;
 
@@ -141,5 +150,21 @@ public class CarServiceImpl implements CarService {
             carModel = carModelDao.findCarModelByModelAndMark_Mark(model, mark).get();
         }
         return carModel;
+    }
+
+    private Car updateCar(CarUpdateReq dto, Car car, CarModel model){
+        return Car.builder()
+                .id(car.getId())
+                .carModel(model == null
+                        ? car.getCarModel() : model)
+                .carNumber(dto.getCarNumber().equals(car.getCarNumber()) || dto.getCarNumber().isEmpty()
+                        ? car.getCarNumber() : dto.getCarNumber())
+                .idImage(dto.getIdImage().equals(car.getIdImage()) || dto.getIdImage() == null
+                        ? car.getIdImage() : dto.getIdImage())
+                .limitations(dto.getLimitations().equals(car.getLimitations()) || dto.getLimitations().isEmpty()
+                        ? car.getLimitations() : dto.getLimitations())
+                .price(dto.getPrice().equals(car.getPrice()) || dto.getPrice() == null
+                        ? car.getPrice() : dto.getPrice())
+                .build();
     }
 }
