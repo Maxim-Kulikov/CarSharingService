@@ -66,9 +66,11 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toOrderResp(order);
     }
 
+    //TODO нету реализации в update
     @Override
     public Long update(OrderResp dto) {
         return null;
+
     }
 
     @Override
@@ -86,5 +88,25 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(status);
         orderDao.save(order);
         return order.getId();
+    }
+
+    //TODO доделать updateOrder
+    private Order updateOrder(OrderResp dto, Order model){
+        return model.changer()
+                .id(model.getId())
+                .adminLogin(dto.getAdminLogin().equals(model.getAdminLogin()) || dto.getAdminLogin() == null
+                        ? model.getAdminLogin() : dto.getAdminLogin())
+                .price(dto.getPrice().equals(model.getPrice()) || dto.getPrice() == null
+                        ? model.getPrice() : dto.getPrice())
+                .startDate(dto.getStartDate().equals(model.getStartDate()) || dto.getStartDate() == null
+                        ? model.getStartDate() : dto.getStartDate())
+                .finishDate(dto.getFinishDate().equals(model.getFinishDate()) || dto.getFinishDate() == null
+                        ? model.getFinishDate() : dto.getFinishDate())
+                .status(dto.getStatus().equals(model.getStatus()) || dto.getStatus() == null
+                        ? model.getStatus() : dto.getStatus())
+                .refuseReason(dto.getRefuseReason().equals(model.getRefuseReason()) || dto.getRefuseReason() == null
+                        ? model.getRefuseReason() : dto.getRefuseReason())
+                //.car(dto.get)
+                .change();
     }
 }

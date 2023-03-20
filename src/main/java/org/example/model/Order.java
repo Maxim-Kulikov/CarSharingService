@@ -1,6 +1,7 @@
 package org.example.model;
 
 import lombok.*;
+import org.aspectj.weaver.ast.Or;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -49,4 +50,52 @@ public class Order {
 
     @Column(name = "price")
     private Long price;
+
+    public Changer changer(){
+        return new Changer();
+    }
+
+    public class Changer{
+        public Changer id(Long id){
+            Order.this.id = id;
+            return this;
+        }
+        public Changer startDate(Date date){
+            Order.this.startDate = date;
+            return this;
+        }
+        public Changer finishDate(Date date){
+            Order.this.finishDate = date;
+            return this;
+        }
+        public Changer status(Boolean status){
+            Order.this.status = status;
+            return this;
+        }
+        public Changer car(Car car){
+            Order.this.car = car;
+            return this;
+        }
+        public Changer user(User user){
+            Order.this.user = user;
+            return this;
+        }
+        public Changer adminLogin(String adminLogin){
+            Order.this.adminLogin = adminLogin;
+            return this;
+        }
+        public Changer refuseReason(String refuseReason){
+            Order.this.refuseReason = refuseReason;
+            return this;
+        }
+        public Changer price(Long price){
+            Order.this.price = price;
+            return this;
+        }
+        public Order change(){
+            return Order.this;
+        }
+
+
+    }
 }

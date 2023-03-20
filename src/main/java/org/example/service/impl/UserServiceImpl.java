@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
     public UserExistedResp update(UserUpdateReq dto, Long id) {
         User user = userDao.findById(id)
                 .orElseThrow(() -> new RuntimeException("Could not update user! Id does not exist!"));
-        user = updateUser1(user, dto);
+        user = updateUserWithChanger(user, dto);
         userDao.save(user);
         return userMapper.toUserExistedResp(user);
     }
@@ -118,7 +118,7 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    public User updateUser1(User model, UserUpdateReq dto){
+    public User updateUserWithChanger(User model, UserUpdateReq dto){
         return model.changer()
                 .id(model.getId())
                 .login(dto.getLogin().equals(model.getLogin()) || dto.getLogin().isEmpty()

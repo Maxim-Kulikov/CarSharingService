@@ -43,4 +43,45 @@ public class ExtraUserData {
 
     @Column(name = "register_date")
     private Date registerDate;
+
+    public Changer changer(){
+        return new Changer();
+    }
+    public class Changer{
+        public Changer id(Long id){
+            ExtraUserData.this.id = id;
+            return this;
+        }
+        public Changer passportNumber(String passportNumber){
+            ExtraUserData.this.passportNumber = passportNumber;
+            return this;
+        }
+        public Changer name(String name){
+            ExtraUserData.this.name = name;
+            return this;
+        }
+        public Changer lastname(String lastname){
+            ExtraUserData.this.lastname = lastname;
+            return this;
+        }
+        public Changer birthdate(Date birthdate){
+            ExtraUserData.this.birthdate = birthdate;
+            return this;
+        }
+        public Changer drivingLicense(String drivingLicense){
+            ExtraUserData.this.drivingLicense = drivingLicense;
+            return this;
+        }
+        public Changer phone(String phone){
+            ExtraUserData.this.phone = phone;
+            return this;
+        }
+        public Changer registerDate(Date registerDate){
+            ExtraUserData.this.registerDate = registerDate;
+            return this;
+        }
+        public ExtraUserData change(){
+            return ExtraUserData.this;
+        }
+    }
 }

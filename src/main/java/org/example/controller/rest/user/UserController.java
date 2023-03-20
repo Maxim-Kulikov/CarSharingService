@@ -32,7 +32,7 @@ public class UserController {
         userService.delete(id);
     }
 
-    @PostMapping("/update/{id}")
+    @PatchMapping("/update/{id}")
     public UserExistedResp update(@RequestBody UserUpdateReq dto, @PathVariable Long id){
         return userService.update(dto, id);
     }

@@ -64,7 +64,7 @@ public class CarServiceImpl implements CarService {
                 .orElseThrow(() -> new RuntimeException("Could not find car by this id!"));
         CarModel carModel = saveOrGetExisted(dto.getMark(), dto.getModel());
 
-        car = updateCar(dto, car, carModel);
+        car = updateCarWithChanger(dto, car, carModel);
         carDao.save(car);
 
         return carMapper.toCarDescriptionResp(car);
@@ -166,5 +166,21 @@ public class CarServiceImpl implements CarService {
                 .price(dto.getPrice().equals(car.getPrice()) || dto.getPrice() == null
                         ? car.getPrice() : dto.getPrice())
                 .build();
+    }
+
+    private Car updateCarWithChanger(CarUpdateReq dto, Car car, CarModel model){
+        return car.changer()
+                .id(car.getId())
+                .carModel(model == null
+                        ? car.getCarModel() : model)
+                .carNumber(dto.getCarNumber().equals(car.getCarNumber()) || dto.getCarNumber().isEmpty()
+                        ? car.getCarNumber() : dto.getCarNumber())
+                .idImage(dto.getIdImage().equals(car.getIdImage()) || dto.getIdImage() == null
+                        ? car.getIdImage() : dto.getIdImage())
+                .limitations(dto.getLimitations().equals(car.getLimitations()) || dto.getLimitations().isEmpty()
+                        ? car.getLimitations() : dto.getLimitations())
+                .price(dto.getPrice().equals(car.getPrice()) || dto.getPrice() == null
+                        ? car.getPrice() : dto.getPrice())
+                .change();
     }
 }

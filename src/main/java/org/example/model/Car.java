@@ -37,4 +37,40 @@ public class Car {
 
     @Column(name = "id_image")
     private Integer idImage;
+
+    public Changer changer(){
+        return new Changer();
+    }
+
+    public class Changer{
+        public Changer id(Integer id){
+            Car.this.id = id;
+            return this;
+        }
+        public Changer carModel(CarModel carModel){
+            Car.this.carModel = carModel;
+            return this;
+        }
+        public Changer carNumber(String carNumber){
+            Car.this.carNumber = carNumber;
+            return this;
+        }
+        public Changer price(Integer price){
+            Car.this.price = price;
+            return this;
+        }
+        public Changer limitations(String limitations){
+            Car.this.limitations = limitations;
+            return this;
+        }
+
+        public Changer idImage(Integer idImage){
+            Car.this.idImage = idImage;
+            return this;
+        }
+
+        public Car change(){
+            return Car.this;
+        }
+    }
 }

@@ -34,7 +34,7 @@ public class ExtraUserDataServiceImpl implements ExtraUserDataService {
     public ExtraUserDataResp update(ExtraUserDataUpdateReq dto, Long id) {
         ExtraUserData extraUserData = extraUserDao.findById(id)
                 .orElseThrow(() -> new RuntimeException("Could not find extra user data by this id!"));
-        extraUserData = updateExtraUserData(extraUserData, dto);
+        extraUserData = updateExtraUserDataWithChanger(extraUserData, dto);
         return extraUserDataMapper.toExtraUserDataResponse(extraUserData);
     }
 
@@ -64,5 +64,25 @@ public class ExtraUserDataServiceImpl implements ExtraUserDataService {
                 .registerDate(dto.getRegisterDate().equals(model.getRegisterDate()) || dto.getRegisterDate() == null
                         ? model.getRegisterDate() : dto.getRegisterDate())
                 .build();
+    }
+
+    private ExtraUserData updateExtraUserDataWithChanger(ExtraUserData model, ExtraUserDataUpdateReq dto){
+        return model.changer()
+                .id(model.getId())
+                .phone(dto.getPhone().equals(model.getPhone()) || dto.getPhone().isEmpty()
+                        ? model.getPhone() : dto.getPhone())
+                .name(dto.getName().equals(model.getName()) || dto.getName().isEmpty()
+                        ? model.getName() : dto.getName())
+                .lastname(dto.getLastname().equals(model.getLastname()) || dto.getLastname().isEmpty()
+                        ? model.getLastname() : dto.getLastname())
+                .birthdate(dto.getBirthdate().equals(model.getBirthdate()) || dto.getBirthdate() == null
+                        ? model.getBirthdate() : dto.getBirthdate())
+                .passportNumber(dto.getPassportNumber().equals(model.getPassportNumber()) || dto.getPassportNumber().isEmpty()
+                        ? model.getPassportNumber() : dto.getPassportNumber())
+                .drivingLicense(dto.getDrivingLicense().equals(model.getDrivingLicense()) || dto.getDrivingLicense().isEmpty()
+                        ? model.getDrivingLicense() : dto.getDrivingLicense())
+                .registerDate(dto.getRegisterDate().equals(model.getRegisterDate()) || dto.getRegisterDate() == null
+                        ? model.getRegisterDate() : dto.getRegisterDate())
+                .change();
     }
 }
