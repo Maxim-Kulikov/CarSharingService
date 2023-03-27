@@ -1,0 +1,8 @@
+server:
+  port: ${PORT:8080}
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: photo_service
