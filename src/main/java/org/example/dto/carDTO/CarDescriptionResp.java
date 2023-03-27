@@ -16,5 +16,5 @@ public class CarDescriptionResp {
     private String carNumber;
     private Integer price;
     private String limitations;
-    private Integer idImage;
+    private String idImage;
 }

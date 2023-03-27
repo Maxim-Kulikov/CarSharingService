@@ -16,12 +16,12 @@ public class OrderController {
     @Autowired
     private final OrderService orderService;
 
-    @RequestMapping("/get/all")
+    @GetMapping("/get/all")
     public List<OrderResp> getAll(){
         return orderService.getAll();
     }
 
-    @RequestMapping("/get/all/{status}")
+    @GetMapping("/get/all/{status}")
     public List<OrderResp> getAll(@PathVariable Boolean status){
         return orderService.getAllAllowed(status);
     }

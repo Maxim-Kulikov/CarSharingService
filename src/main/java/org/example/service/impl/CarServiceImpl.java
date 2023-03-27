@@ -52,13 +52,6 @@ public class CarServiceImpl implements CarService {
 
     @Transactional
     @Override
-    public CarDescriptionResp getCarDescription(CarInfoResp dto){
-        Car car = carDao.findFirstById(dto.getId()).orElseThrow(() -> new RuntimeException("Could not find car by this dto!"));
-        return carMapper.toCarDescriptionResp(car);
-    }
-
-    @Transactional
-    @Override
     public CarDescriptionResp update(CarUpdateReq dto, Integer id) {
         Car car = carDao.findFirstById(id)
                 .orElseThrow(() -> new RuntimeException("Could not find car by this id!"));
@@ -89,17 +82,15 @@ public class CarServiceImpl implements CarService {
     @Transactional
     @Override
     public List<CarInfoResp> getAllCarsPresentationByMark(String mark){
-        return Stream.of(carDao.findAllByCarModel_Mark_Mark(mark))
-                .map(car -> carMapper.toCarPresentationDto((Car) car))
-                .toList();
+        return carMapper.toListCarPresentation(
+                carDao.findAllByCarModel_Mark_Mark(mark));
     }
 
     @Transactional
     @Override
     public List<CarInfoResp> getAllCarsPresentationByModel(String model){
-        return Stream.of(carDao.findAllByCarModel_Model(model))
-                .map(car -> carMapper.toCarPresentationDto((Car) car))
-                .toList();
+        return carMapper.toListCarPresentation(
+                carDao.findAllByCarModel_Model(model));
     }
 
     @Transactional
@@ -159,8 +150,6 @@ public class CarServiceImpl implements CarService {
                         ? car.getCarModel() : model)
                 .carNumber(dto.getCarNumber().equals(car.getCarNumber()) || dto.getCarNumber().isEmpty()
                         ? car.getCarNumber() : dto.getCarNumber())
-                .idImage(dto.getIdImage().equals(car.getIdImage()) || dto.getIdImage() == null
-                        ? car.getIdImage() : dto.getIdImage())
                 .limitations(dto.getLimitations().equals(car.getLimitations()) || dto.getLimitations().isEmpty()
                         ? car.getLimitations() : dto.getLimitations())
                 .price(dto.getPrice().equals(car.getPrice()) || dto.getPrice() == null
@@ -175,8 +164,6 @@ public class CarServiceImpl implements CarService {
                         ? car.getCarModel() : model)
                 .carNumber(dto.getCarNumber().equals(car.getCarNumber()) || dto.getCarNumber().isEmpty()
                         ? car.getCarNumber() : dto.getCarNumber())
-                .idImage(dto.getIdImage().equals(car.getIdImage()) || dto.getIdImage() == null
-                        ? car.getIdImage() : dto.getIdImage())
                 .limitations(dto.getLimitations().equals(car.getLimitations()) || dto.getLimitations().isEmpty()
                         ? car.getLimitations() : dto.getLimitations())
                 .price(dto.getPrice().equals(car.getPrice()) || dto.getPrice() == null

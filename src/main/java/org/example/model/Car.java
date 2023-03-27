@@ -35,9 +35,6 @@ public class Car {
     @Column(name = "limitations")
     private String limitations;
 
-    @Column(name = "id_image")
-    private Integer idImage;
-
     public Changer changer(){
         return new Changer();
     }
@@ -63,12 +60,6 @@ public class Car {
             Car.this.limitations = limitations;
             return this;
         }
-
-        public Changer idImage(Integer idImage){
-            Car.this.idImage = idImage;
-            return this;
-        }
-
         public Car change(){
             return Car.this;
         }

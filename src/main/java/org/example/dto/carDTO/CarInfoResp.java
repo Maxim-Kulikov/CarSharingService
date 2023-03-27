@@ -13,5 +13,5 @@ public class CarInfoResp {
     private Integer id;
     private String mark;
     private String model;
-    private Integer idImage;
+    private String idImage;
 }

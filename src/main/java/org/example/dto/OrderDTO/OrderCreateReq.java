@@ -15,6 +15,4 @@ import java.sql.Date;
 public class OrderCreateReq {
     private Date startDate;
     private Date finishDate;
-//    private Integer idCar;
-//    private Long idUser;
 }

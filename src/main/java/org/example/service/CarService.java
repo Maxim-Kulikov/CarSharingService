@@ -24,8 +24,6 @@ public interface CarService {
     @Transactional
     CarDescriptionResp getCarDescription(Integer id);
     @Transactional
-    CarDescriptionResp getCarDescription(CarInfoResp dto);
-    @Transactional
     CarDescriptionResp update(CarUpdateReq dto, Integer id);
     @Transactional
     CarDescriptionResp save(CarCreateReq dto);

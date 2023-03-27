@@ -16,7 +16,7 @@ public class ExtraUserDataController {
     @Autowired
     private final ExtraUserDataService extraUserDataService;
 
-    @GetMapping("/update/{id}")
+    @PatchMapping("/update/{id}")
     public ExtraUserDataResp update(@RequestBody ExtraUserDataUpdateReq dto, @PathVariable Long id){
         return extraUserDataService.update(dto, id);
     }

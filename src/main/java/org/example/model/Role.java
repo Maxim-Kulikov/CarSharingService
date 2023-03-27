@@ -2,7 +2,6 @@ package org.example.model;
 
 import lombok.*;
 import org.hibernate.mapping.Set;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 

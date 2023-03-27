@@ -12,7 +12,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CarMapper {
-    @Mapping(target = "idImage", source = "idImage")
     @Mapping(target = "mark", source = "carModel.mark.mark")
     @Mapping(target = "model", source = "carModel.model")
     CarInfoResp toCarPresentationDto(Car car);

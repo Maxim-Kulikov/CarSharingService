@@ -23,11 +23,6 @@ public class CarController {
         return carService.getCarDescription(id);
     }
 
-    @GetMapping("/get/description")
-    public CarDescriptionResp getDescription(@RequestBody CarInfoResp dto){
-        return carService.getCarDescription(dto);
-    }
-
     @GetMapping("/get/presentation/all")
     public List<CarInfoResp> getAllPresentation(){
         return carService.getAllCarsPresentation();
@@ -58,11 +53,13 @@ public class CarController {
         return carService.getCarPresentation(id);
     }
 
+    //TODO get all by mark не работает
     @GetMapping("/get/presentation/all/{mark}")
     public List<CarInfoResp> getAllPresentationByMark(@PathVariable String mark){
         return carService.getAllCarsPresentationByMark(mark);
     }
 
+    //TODO get all by model не работает
     @GetMapping("/get/presentation/all/{model}")
     public List<CarInfoResp> getAllPresentationByModel(@PathVariable String model){
         return carService.getAllCarsPresentationByModel(model);

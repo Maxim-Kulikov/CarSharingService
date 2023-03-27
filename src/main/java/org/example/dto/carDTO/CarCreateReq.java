@@ -14,6 +14,6 @@ public class CarCreateReq {
     private String model;
     private Integer price;
     private String number;
-    private Integer idImage;
+    private String idImage;
     private String limitations;
 }
