@@ -1,6 +1,6 @@
-package com.example.photo_service.photo_service.service;
+package com.example.service;
 
-import com.example.photo_service.photo_service.dto.PhotoResp;
+import com.example.dto.PhotoResp;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +11,8 @@ import java.util.List;
 public interface PhotoService {
     @Transactional
     String save(Integer idCar, MultipartFile file);
+    @Transactional
+    String save(PhotoResp photoResp);
     @Transactional
     PhotoResp findById(String id);
     @Transactional

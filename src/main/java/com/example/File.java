@@ -1,4 +1,4 @@
-package com.example.photo_service.photo_service;
+package com.example;
 
 import lombok.*;
 

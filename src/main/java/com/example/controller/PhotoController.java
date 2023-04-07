@@ -1,7 +1,7 @@
-package com.example.photo_service.photo_service.controller;
+package com.example.controller;
 
-import com.example.photo_service.photo_service.service.PhotoService;
-import com.example.photo_service.photo_service.dto.PhotoResp;
+import com.example.service.PhotoService;
+import com.example.dto.PhotoResp;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

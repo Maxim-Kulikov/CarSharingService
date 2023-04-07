@@ -1,6 +1,6 @@
-package com.example.photo_service.photo_service.document;
+package com.example.document;
 
-import com.example.photo_service.photo_service.File;
+import com.example.File;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

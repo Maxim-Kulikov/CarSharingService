@@ -1,6 +1,6 @@
-package com.example.photo_service.photo_service.repository;
+package com.example.repository;
 
-import com.example.photo_service.photo_service.document.Photo;
+import com.example.document.Photo;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;

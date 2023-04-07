@@ -1,11 +1,11 @@
-package com.example.photo_service.photo_service.service.impl;
+package com.example.service.impl;
 
-import com.example.photo_service.photo_service.document.Photo;
-import com.example.photo_service.photo_service.repository.PhotoRepository;
-import com.example.photo_service.photo_service.File;
-import com.example.photo_service.photo_service.dto.PhotoResp;
-import com.example.photo_service.photo_service.mapper.PhotoMapper;
-import com.example.photo_service.photo_service.service.PhotoService;
+import com.example.document.Photo;
+import com.example.repository.PhotoRepository;
+import com.example.File;
+import com.example.dto.PhotoResp;
+import com.example.mapper.PhotoMapper;
+import com.example.service.PhotoService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +41,20 @@ public class PhotoServiceImpl implements PhotoService {
                 .file(filePhoto)
                 .build();
 
+        photoRepository.insert(photo);
+        return photo.getId();
+    }
+
+    @Override
+    public String save(PhotoResp photoResp) {
+        File filePhoto = File.builder()
+                .name(photoResp.getName())
+                .bytes(photoResp.getBytes())
+                .build();
+        Photo photo = Photo.builder()
+                .idCar(photoResp.getIdCar())
+                .file(filePhoto)
+                .build();
         photoRepository.insert(photo);
         return photo.getId();
     }

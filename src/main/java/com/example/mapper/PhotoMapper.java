@@ -1,7 +1,7 @@
-package com.example.photo_service.photo_service.mapper;
+package com.example.mapper;
 
-import com.example.photo_service.photo_service.document.Photo;
-import com.example.photo_service.photo_service.dto.PhotoResp;
+import com.example.document.Photo;
+import com.example.dto.PhotoResp;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
