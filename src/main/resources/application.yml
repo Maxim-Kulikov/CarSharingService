@@ -1,6 +1,7 @@
+server:
+  port: 8080
+
 spring:
-  application:
-    name: CarSharingService
   jpa:
     properties:
       show-sql: true
@@ -13,3 +14,14 @@ spring:
     pool.size: 20
   liquibase:
     change-log: db.changelog
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVERS:localhost:29092}
+    producer:
+      bootstrap-servers: ${KAFKA_SERVERS:localhost:29092}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      #properties:
+        #spring.json.add.type.headers: false
+        #max.request.size: 209715200
+        #buffer.memory: 209715200
+

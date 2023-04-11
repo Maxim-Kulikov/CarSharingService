@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "users")
-public class User /*implements UserDetails*/ {
+public class User {
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(generator = "users_id_seq")

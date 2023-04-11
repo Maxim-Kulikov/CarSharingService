@@ -7,7 +7,9 @@ import org.example.dto.carDTO.CarCreateReq;
 import org.example.dto.carDTO.CarUpdateReq;
 import org.example.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -68,5 +70,11 @@ public class CarController {
     @GetMapping("/get/presentation/all/mark_and_model")
     public List<CarInfoResp> getAllPresentation(@RequestParam String mark, @RequestParam String model){
         return carService.getAllCarsPresentationByMarkAndModel(mark, model);
+    }
+
+    @PostMapping(value = "/save/for/liza", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE} )
+    public void saveForLiza(@RequestPart MultipartFile file, @RequestPart CarCreateReq dto){
+        System.out.println(file.getName());
+        System.out.println(dto.toString());
     }
 }
