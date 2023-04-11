@@ -28,8 +28,8 @@ public class PhotoController {
     }
 
     @GetMapping("/get/id_car/{idCar}")
-    public PhotoResp getByCarId(@PathVariable Integer idCar){
-        return photoService.findByCarId(idCar);
+    public List<PhotoResp> getByCarId(@PathVariable Integer idCar){
+        return photoService.findAllByCarId(idCar);
     }
 
     @GetMapping("/get/all/{idCar}")
