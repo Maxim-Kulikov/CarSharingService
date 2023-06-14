@@ -2,11 +2,14 @@ package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import org.example.dao.repository.OrderDao;
-import org.example.dao.repository.car.CarDao;
-import org.example.dao.repository.user.UserDao;
-import org.example.dto.OrderDTO.OrderCreateReq;
-import org.example.dto.OrderDTO.OrderResp;
+import org.example.controller.exception.CarNotFoundException;
+import org.example.controller.exception.UserNotFoundException;
+import org.example.dto.orderDTO.OrderFilterReq;
+import org.example.repository.OrderDao;
+import org.example.repository.car.CarDao;
+import org.example.repository.user.UserDao;
+import org.example.dto.orderDTO.OrderCreateReq;
+import org.example.dto.orderDTO.OrderResp;
 import org.example.mapper.OrderMapper;
 import org.example.model.Car;
 import org.example.model.Order;
@@ -18,7 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -38,28 +41,29 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public List<OrderResp> getAll() {
+    public List<OrderResp> getAll(OrderFilterReq filter) {
         return orderMapper.toListOrderCreationResponses(
-                (List<Order>) orderDao.findAll()
-        );
+                ((List<Order>) orderDao.findAll()).stream()
+                        .filter(order -> (filter.getStatus() == null || filter.getStatus().equals(order.getStatus()))
+                                && (filter.getIdAdmin() == null || filter.getIdAdmin().equals(order.getAdmin().getId()))
+                                && (filter.getIdUser() == null || filter.getIdUser().equals(order.getUser().getId()))
+                        ).collect(Collectors.toList()));
     }
 
     @Override
-    public List<OrderResp> getAllAllowed(Boolean status) {
-        return orderMapper.toListOrderCreationResponses(
-                orderDao.findAllByStatusIs(status)
-        );
-    }
+    public OrderResp save(OrderCreateReq dto) throws UserNotFoundException, CarNotFoundException {
+        Long idUser = dto.getIdUser();
+        Integer idCar = dto.getIdCar();
 
-    @Override
-    public OrderResp save(OrderCreateReq dto, Long idUser, Integer idCar) {
         User user = userDao.findById(idUser)
-                .orElseThrow(() -> new RuntimeException("Could not find user by this id!"));
+                .orElseThrow(() -> new UserNotFoundException(idUser));
         Car car = carDao.findById(idCar)
-                .orElseThrow(() -> new RuntimeException("Could not find car by this id!"));
+                .orElseThrow(() -> new CarNotFoundException(idCar));
         Order order = orderMapper.toOrder(dto, user, car);
-        Long difference = (dto.getFinishDate().getTime()-dto.getStartDate().getTime())/(24*60*60*1000);
-        Long price = car.getPrice()*difference;
+
+        Long difference = (dto.getFinishDate().getTime() - dto.getStartDate().getTime()) / (24 * 60 * 60 * 1000);
+        Long price = car.getPrice() * difference;
+
         order.setPrice(price);
         order.setStatus(false);
         orderDao.save(order);
@@ -79,23 +83,23 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Long allowOrder(Long idOrder, Long idAdmin, Boolean status) {
+    public Long allowOrder(Long idOrder, Long idAdmin, Boolean status) throws UserNotFoundException {
         User admin = userDao.findById(idAdmin)
-                .orElseThrow(() -> new RuntimeException("Could not find admin by this id!"));
+                .orElseThrow(() -> new UserNotFoundException(idAdmin));
         Order order = orderDao.findById(idOrder)
-                .orElseThrow(() -> new RuntimeException("Could not find order by this order!"));
-        order.setAdminLogin(admin.getLogin());
+                .orElseThrow(() -> new RuntimeException("Could not find order by this id!"));
+        order.setAdmin(admin);
         order.setStatus(status);
         orderDao.save(order);
         return order.getId();
     }
 
     //TODO доделать updateOrder
-    private Order updateOrder(OrderResp dto, Order model){
+    /*private Order updateOrder(OrderResp dto, Order model) {
         return model.changer()
                 .id(model.getId())
-                .adminLogin(dto.getAdminLogin().equals(model.getAdminLogin()) || dto.getAdminLogin() == null
-                        ? model.getAdminLogin() : dto.getAdminLogin())
+                .admin(dto.getAdminLogin().equals(model.getAdmin()) || dto.getAdminLogin() == null
+                        ? model.getAdmin() : dto.())
                 .price(dto.getPrice().equals(model.getPrice()) || dto.getPrice() == null
                         ? model.getPrice() : dto.getPrice())
                 .startDate(dto.getStartDate().equals(model.getStartDate()) || dto.getStartDate() == null
@@ -108,5 +112,5 @@ public class OrderServiceImpl implements OrderService {
                         ? model.getRefuseReason() : dto.getRefuseReason())
                 //.car(dto.get)
                 .change();
-    }
+    }*/
 }

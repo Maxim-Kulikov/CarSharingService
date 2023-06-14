@@ -5,6 +5,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,17 +18,17 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "users")
-public class User {
+public class User /*implements UserDetails*/ {
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(generator = "users_id_seq")
     @GenericGenerator(name = "users_id_seq", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator")
     private Long id;
 
-    @Column(name = "login")
+    @Column(name = "login", nullable = false)
     private String login;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -38,12 +39,10 @@ public class User {
     @JoinColumn(name = "id_extra_users_data", referencedColumnName = "id")
     private ExtraUserData extraUserData;
 
-    /*@ManyToMany(fetch = FetchType.EAGER)
-    private Set<Role> roles;
 
-    @Override
+    /*@Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return Arrays.asList(role);
     }
 
     @Override
@@ -71,42 +70,48 @@ public class User {
         return true;
     }
 
-    *//*@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Fetch(Fet)
-    private List<Order> orders;*//*
 */
-
-    public Changer changer(){
+    public Changer changer() {
         return new Changer();
     }
 
-    public class Changer{
-        public Changer id(Long id){
-            User.this.id = id;
+    public class Changer {
+        public Changer id(Long id) {
+            if (id != null) {
+                User.this.id = id;
+            }
             return this;
         }
 
-        public Changer login(String login){
-            User.this.login = login;
+        public Changer login(String login) {
+            if (!login.isBlank()) {
+                User.this.login = login;
+            }
             return this;
         }
 
-        public Changer password(String password){
-            User.this.password = password;
+        public Changer password(String password) {
+            if (!password.isBlank()) {
+                User.this.password = password;
+            }
             return this;
         }
 
-        public Changer role(Role role){
-            User.this.role = role;
+        public Changer role(Role role) {
+            if (role != null) {
+                User.this.role = role;
+            }
             return this;
         }
 
-        public Changer extraUserData(ExtraUserData extraUserData){
-            User.this.extraUserData = extraUserData;
+        public Changer extraUserData(ExtraUserData extraUserData) {
+            if (extraUserData != null) {
+                User.this.extraUserData = extraUserData;
+            }
             return this;
         }
 
-        public User change(){
+        public User change() {
             return User.this;
         }
 

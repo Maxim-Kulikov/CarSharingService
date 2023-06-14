@@ -1,14 +1,20 @@
 package org.example.feign;
 
-import org.example.dto.PhotoResp;
+import org.example.dto.photoDTO.PhotoRespDto;
+import org.example.dto.photoDTO.SavePhotoDto;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(value = "CarSharingService", url = "http://localhost:8081/photo")
+@FeignClient(value = "photo-client", url = "http://localhost:8081/photos")
 public interface PhotoGetterClient {
-    @GetMapping(value = "/get/id_car/{idCar}")
-    List<PhotoResp> getByCarId(@PathVariable Integer idCar);
+    @GetMapping(value = "")
+    List<PhotoRespDto> getByCarId(@RequestParam("id-car") Integer idCar);
+
+    @GetMapping("")
+    List<PhotoRespDto> getAll();
+
+    @GetMapping("/{id}")
+    PhotoRespDto getById(@PathVariable String id);
 }

@@ -1,13 +1,12 @@
 package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
-import org.example.dao.repository.car.CarDao;
-import org.example.dao.repository.car.CarMarkDao;
-import org.example.dao.repository.car.CarModelDao;
-import org.example.dto.carDTO.CarCreateReq;
-import org.example.dto.carDTO.CarDescriptionResp;
-import org.example.dto.carDTO.CarInfoResp;
-import org.example.dto.carDTO.CarUpdateReq;
+import org.example.dto.carDTO.*;
+import org.example.dto.sortenum.SortField;
+import org.example.dto.sortenum.SortOrder;
+import org.example.repository.car.CarDao;
+import org.example.repository.car.CarMarkDao;
+import org.example.repository.car.CarModelDao;
 import org.example.mapper.car.CarMapper;
 import org.example.mapper.car.CarMarkMapper;
 import org.example.mapper.car.CarModelMapper;
@@ -20,8 +19,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -43,7 +43,7 @@ public class CarServiceImpl implements CarService {
 
     @Transactional
     @Override
-    public CarInfoResp getCarPresentation(Integer id){
+    public CarInfoResp getCarPresentation(Integer id) {
         return carMapper.toCarPresentationDto(
                 carDao.findFirstById(id).
                         orElseThrow(() -> new RuntimeException("Could not find car by this id!"))
@@ -65,7 +65,7 @@ public class CarServiceImpl implements CarService {
 
     @Transactional
     @Override
-    public CarDescriptionResp getCarDescription(Integer id){
+    public CarDescriptionResp getCarDescription(Integer id) {
         Car car = carDao.findFirstById(id)
                 .orElseThrow(() -> new RuntimeException("Could not find car by this id!"));
         return carMapper.toCarDescriptionResp(car);
@@ -73,43 +73,23 @@ public class CarServiceImpl implements CarService {
 
     @Transactional
     @Override
-    public List<CarInfoResp> getAllCarsPresentation(){
+    public List<CarInfoResp> getAllCarsPresentation(CarFilterReq filter) {
         return carMapper.toListCarPresentation(
-                (List<Car>) carDao.findAll()
+                filterCars((List<Car>) carDao.findAll(), filter)
         );
     }
 
     @Transactional
     @Override
-    public List<CarInfoResp> getAllCarsPresentationByMark(String mark){
-        return carMapper.toListCarPresentation(
-                carDao.findAllByCarModel_Mark_Mark(mark));
-    }
-
-    @Transactional
-    @Override
-    public List<CarInfoResp> getAllCarsPresentationByModel(String model){
-        return carMapper.toListCarPresentation(
-                carDao.findAllByCarModel_Model(model));
-    }
-
-    @Transactional
-    @Override
-    public List<CarInfoResp> getAllCarsPresentationByMarkAndModel(String mark, String model){
-        return carMapper.toListCarPresentation(
-                carDao.findAllByCarModel_ModelAndCarModel_Mark_Mark(model, mark)
+    public List<CarDescriptionResp> getAllCarsDescription(CarFilterReq filter) {
+        return carMapper.toListCarDescription(
+                filterCars((List<Car>) carDao.findAll(), filter)
         );
     }
 
     @Transactional
     @Override
-    public List<CarDescriptionResp> getAllCarsDescription() {
-        return carMapper.toListCarDescription((List<Car>) carDao.findAll());
-    }
-
-    @Transactional
-    @Override
-    public CarDescriptionResp save(CarCreateReq dto){
+    public CarDescriptionResp save(CarCreateReq dto) {
         String mark = dto.getMark(),
                 model = dto.getModel();
         CarModel carModel = saveOrGetExisted(mark, model);
@@ -125,14 +105,14 @@ public class CarServiceImpl implements CarService {
         carDao.deleteById(id);
     }
 
-    private CarModel saveOrGetExisted(String mark, String model){
-        if(mark == null || model == null)
+    private CarModel saveOrGetExisted(String mark, String model) {
+        if (mark == null || model == null)
             return null;
 
         CarMark carMark = null;
         CarModel carModel = null;
 
-        if(!carModelDao.existsCarModelByModelAndMark_Mark(model, mark)){
+        if (!carModelDao.existsCarModelByModelAndMark_Mark(model, mark)) {
             carMark = carMarkDao.existsCarMarkByMark(mark)
                     ? carMarkDao.findCarMarkByMark(mark).get() : carMarkDao.save(carMarkMapper.toCarMark(mark));
             carModel = carModelMapper.toCarModel(model, carMark);
@@ -143,7 +123,79 @@ public class CarServiceImpl implements CarService {
         return carModel;
     }
 
-    private Car updateCar(CarUpdateReq dto, Car car, CarModel model){
+    private List<Car> filterCars(List<Car> cars, CarFilterReq filter) {
+        List<Integer> modelIds = filter.getIdModels();
+        List<Integer> markIds = filter.getIdMarks();
+        Integer minPrice = filter.getMinPrice();
+        Integer maxPrice = filter.getMaxPrice();
+        SortOrder sortOrder = filter.getSortOrder();
+        SortField sortField = filter.getSortField();
+
+        Stream<Car> stream = cars.stream().filter(car -> {
+            if (!(modelIds == null
+                    || modelIds.isEmpty()
+                    || modelIds.contains(car.getCarModel().getId()))
+            ) {
+                return false;
+            }
+
+            if (!(markIds == null
+                    || markIds.isEmpty()
+                    || markIds.contains(car.getCarModel().getMark().getId()))
+            ) {
+                return false;
+            }
+
+            if (!(minPrice == null || car.getPrice() >= minPrice)) {
+                return false;
+            }
+
+            if (!(maxPrice == null || car.getPrice() <= maxPrice)) {
+                return false;
+            }
+            return true;
+        });
+
+        return sortField != null && sortOrder != null ? stream.sorted(new Comparator<Car>() {
+            @Override
+            public int compare(Car o1, Car o2) {
+                if (sortField == SortField.mark) {
+                    if (sortOrder == SortOrder.asc) {
+                        return compareMarks(o1, o2);
+                    }
+                    return compareMarks(o2, o1);
+                }
+
+                if (sortField == SortField.model) {
+                    if (sortOrder == SortOrder.asc) {
+                        return compareModels(o1, o2);
+                    }
+                    return compareModels(o2, o1);
+                }
+
+                if (sortOrder == SortOrder.asc) {
+                    return comparePrices(o1, o2);
+                }
+                return comparePrices(o2, o1);
+            }
+
+            private int compareMarks(Car o1, Car o2) {
+                return o1.getCarModel().getMark().getMark().compareTo(o2.getCarModel().getMark().getMark());
+            }
+
+            private int compareModels(Car o1, Car o2) {
+                return o1.getCarModel().getModel().compareTo(o2.getCarModel().getModel());
+            }
+
+            private int comparePrices(Car o1, Car o2) {
+                return o1.getPrice() - o2.getPrice();
+            }
+        }).collect(Collectors.toList())
+                : stream.collect(Collectors.toList());
+    }
+
+
+    private Car updateCar(CarUpdateReq dto, Car car, CarModel model) {
         return Car.builder()
                 .id(car.getId())
                 .carModel(model == null
@@ -157,7 +209,7 @@ public class CarServiceImpl implements CarService {
                 .build();
     }
 
-    private Car updateCarWithChanger(CarUpdateReq dto, Car car, CarModel model){
+    private Car updateCarWithChanger(CarUpdateReq dto, Car car, CarModel model) {
         return car.changer()
                 .id(car.getId())
                 .carModel(model == null

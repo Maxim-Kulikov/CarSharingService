@@ -1,8 +1,6 @@
 package org.example.model;
 
 import lombok.*;
-import org.hibernate.mapping.Set;
-
 import javax.persistence.*;
 
 @Getter
@@ -23,11 +21,7 @@ public class Role /*implements GrantedAuthority*/ {
     @Column(name = "role")
     private String role;
 
-    /*@Transient
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
-
-    @Override
+    /*@Override
     public String getAuthority() {
         return role;
     }*/

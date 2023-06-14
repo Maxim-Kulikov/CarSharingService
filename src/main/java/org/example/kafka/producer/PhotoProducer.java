@@ -2,7 +2,7 @@ package org.example.kafka.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.dto.PhotoResp;
+import org.example.dto.photoDTO.PhotoRespDto;
 import org.example.mapper.PhotoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -28,7 +28,7 @@ public class PhotoProducer {
     }
 
     public void send(Integer idCar, MultipartFile multipartFile) throws IOException {
-        PhotoResp photoResp = photoMapper.toPhotoResp(idCar, multipartFile);
+        PhotoRespDto photoResp = photoMapper.toPhotoResp(idCar, multipartFile);
         String json = null;
         ObjectMapper mapper = new ObjectMapper();
         try {

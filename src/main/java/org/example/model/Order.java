@@ -42,8 +42,9 @@ public class Order {
     @JoinColumn(name = "id_user", referencedColumnName = "id")
     private User user;
 
-    @Column(name = "admin_login")
-    private String adminLogin;
+    @OneToOne
+    @JoinColumn(name = "id_admin", referencedColumnName = "id")
+    private User admin;
 
     @Column(name = "refuse_reason")
     private String refuseReason;
@@ -80,8 +81,8 @@ public class Order {
             Order.this.user = user;
             return this;
         }
-        public Changer adminLogin(String adminLogin){
-            Order.this.adminLogin = adminLogin;
+        public Changer admin(User admin){
+            Order.this.admin = admin;
             return this;
         }
         public Changer refuseReason(String refuseReason){

@@ -1,8 +1,11 @@
 package org.example.service;
 
-import org.example.dto.userDTO.UserAuthorizeReq;
+import org.example.controller.exception.UserNotFoundException;
+import org.example.dto.JwtTokenResp;
+import org.example.dto.userDTO.UserAuthReq;
 import org.example.dto.userDTO.UserExistedResp;
 import org.example.dto.userDTO.UserUpdateReq;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,10 +13,12 @@ import java.util.List;
 @Service
 public interface UserService {
     List<UserExistedResp> getAll();
-    UserExistedResp save(UserAuthorizeReq dto);
+    UserExistedResp save(UserAuthReq dto);
     void delete(Long id);
-    UserExistedResp findByLogin(String login);
-    UserExistedResp update(UserUpdateReq dto, Long id);
-    UserExistedResp authorize(UserAuthorizeReq dto);
+    UserExistedResp findByLogin(String login) throws UserNotFoundException;
+    UserExistedResp update(UserUpdateReq dto, Long id) throws UserNotFoundException;
+    UserExistedResp authorize(UserAuthReq dto) throws UserNotFoundException;
+    UserExistedResp getExistedUser(Long id) throws UserNotFoundException;
+   // JwtTokenResp getJwtToken(UserAuthReq dto);
 
 }

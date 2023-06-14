@@ -2,7 +2,7 @@ package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import org.example.dao.repository.user.ExtraUserDao;
+import org.example.repository.user.ExtraUserDao;
 import org.example.dto.userDTO.ExtraUserDataResp;
 import org.example.dto.userDTO.ExtraUserDataUpdateReq;
 import org.example.mapper.user.ExtraUserDataMapper;

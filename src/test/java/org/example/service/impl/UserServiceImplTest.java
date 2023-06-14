@@ -1,8 +1,8 @@
 package org.example.service.impl;
 
-import org.example.dao.repository.RoleDao;
-import org.example.dao.repository.user.UserDao;
-import org.example.dto.userDTO.UserAuthorizeReq;
+import org.example.repository.RoleDao;
+import org.example.repository.user.UserDao;
+import org.example.dto.userDTO.UserAuthReq;
 import org.example.dto.userDTO.UserExistedResp;
 import org.example.dto.userDTO.UserUpdateReq;
 import org.example.mapper.user.UserMapper;
@@ -43,7 +43,7 @@ class UserServiceImplTest {
     private final Short ID_ROLE = 1;
     private final Optional<User> user = getUser();
     private final Optional<UserExistedResp> userExistedResp = getUserExistedResp();
-    private final Optional<UserAuthorizeReq> userAuthorizeReq = getUserAuthorizeReq();
+    private final Optional<UserAuthReq> userAuthorizeReq = getUserAuthorizeReq();
     private final Optional<UserUpdateReq> userUpdateReq = getUserUpdateReq();
     @MockBean
     private UserDao userDao;
@@ -168,8 +168,8 @@ class UserServiceImplTest {
                 .build());
     }
 
-    private Optional<UserAuthorizeReq> getUserAuthorizeReq(){
-        return Optional.ofNullable(UserAuthorizeReq.builder()
+    private Optional<UserAuthReq> getUserAuthorizeReq(){
+        return Optional.ofNullable(UserAuthReq.builder()
                 .login(LOGIN)
                 .password(PASSWORD)
                 .build());

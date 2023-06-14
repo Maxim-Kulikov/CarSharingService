@@ -1,8 +1,8 @@
 package org.example.service.impl;
 
-import org.example.dao.repository.car.CarDao;
-import org.example.dao.repository.car.CarMarkDao;
-import org.example.dao.repository.car.CarModelDao;
+import org.example.repository.car.CarDao;
+import org.example.repository.car.CarMarkDao;
+import org.example.repository.car.CarModelDao;
 import org.example.dto.carDTO.CarDescriptionResp;
 import org.example.dto.carDTO.CarInfoResp;
 import org.example.dto.carDTO.CarUpdateReq;
@@ -13,7 +13,6 @@ import org.example.model.CarModel;
 import org.example.service.CarService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;

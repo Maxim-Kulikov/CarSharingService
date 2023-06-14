@@ -2,9 +2,11 @@ package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import org.example.dao.repository.RoleDao;
-import org.example.dao.repository.user.UserDao;
-import org.example.dto.userDTO.UserAuthorizeReq;
+import org.example.controller.exception.RoleNotFoundException;
+import org.example.controller.exception.UserNotFoundException;
+import org.example.repository.RoleDao;
+import org.example.repository.user.UserDao;
+import org.example.dto.userDTO.UserAuthReq;
 import org.example.dto.userDTO.UserExistedResp;
 import org.example.dto.userDTO.UserUpdateReq;
 import org.example.mapper.user.UserMapper;
@@ -36,16 +38,43 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     @Autowired
     private final RoleDao roleDao;
+    /*@Autowired
+    private final JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private final UserDetailsService userDetailsService;
+    @Autowired
+    private final AuthenticationManager authenticationManager;
+    @Override
+    @Transactional
+    public JwtTokenResp getJwtToken(UserAuthReq dto){
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(dto.getLogin(), dto.getPassword()));
+            System.out.println(authentication);
+        } catch (BadCredentialsException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или пароль неправильны", e);
+        }
+        //String jwt = jwtTokenUtil.generateToken((UserDetails) authentication.getPrincipal());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(dto.getLogin());
+        String jwtToken = jwtTokenUtil.generateToken(userDetails);
+        String[] chunks = jwtToken.split("\\.");
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+        System.out.println("UserServiceImpl getJwtToken:\n" + new String(decoder.decode(chunks[0])));
+        System.out.println(new String(decoder.decode(chunks[1])));
+        return new JwtTokenResp(jwtToken);
+    }
+*/
 
     @Override
     @Transactional
-    public List<UserExistedResp> getAll(){
+    public List<UserExistedResp> getAll() {
         return userMapper.toUserExistedList((List<User>) userDao.findAll());
     }
 
     @Override
     @Transactional
-    public UserExistedResp save(UserAuthorizeReq dto){
+    public UserExistedResp save(UserAuthReq dto) {
         return Optional.ofNullable(dto)
                 .map(userMapper::toUser)
                 .map(this::setRole)
@@ -58,28 +87,21 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void delete(Long id){
+    public void delete(Long id) {
         userDao.deleteById(id);
     }
 
     @Override
     @Transactional
-    public UserExistedResp findByLogin(String login) {
-     /*   return userMapper.toUserExistedResp(
-                userDao.findFirstByLogin(login)
-                .orElseThrow(() -> new RuntimeException("Could find user by this login!"))
-        );*/
-        return Optional.ofNullable(userDao.findFirstByLogin(login))
-                .orElseThrow(() -> new RuntimeException("Could not find user!"))
-                .map(userMapper::toUserExistedResp)
-                .get();
+    public UserExistedResp findByLogin(String login) throws UserNotFoundException {
+        User user = getUserOrThrowException(login);
+        return userMapper.toUserExistedResp(user);
     }
 
     @Override
     @Transactional
-    public UserExistedResp update(UserUpdateReq dto, Long id) {
-        User user = userDao.findById(id)
-                .orElseThrow(() -> new RuntimeException("Could not update user! Id does not exist!"));
+    public UserExistedResp update(UserUpdateReq dto, Long id) throws UserNotFoundException {
+        User user = getUserOrThrowException(id);
         user = updateUserWithChanger(user, dto);
         userDao.save(user);
         return userMapper.toUserExistedResp(user);
@@ -87,46 +109,69 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserExistedResp authorize(UserAuthorizeReq dto) {
+    public UserExistedResp authorize(UserAuthReq dto) throws UserNotFoundException {
         User user = userMapper.toUser(dto);
-        user = userDao.findFirstByLoginAndPassword(user.getLogin(), user.getPassword())
-                .orElseThrow(() -> new RuntimeException("This user does not exist!"));
+        String login = user.getLogin();
+        String password = user.getPassword();
+        user = getUserOrThrowException(login, password);
         return userMapper.toUserExistedResp(user);
     }
 
-    private User setRole(User user){
+    @Override
+    @Transactional
+    public UserExistedResp getExistedUser(Long id) throws UserNotFoundException {
+        User user = getUserOrThrowException(id);
+        return userMapper.toUserExistedResp(user);
+    }
+
+    private User setRole(User user) {
         user.setRole(findRole(ROLE_USER));
         return user;
     }
 
-    private User setEmptyExtraUserData(User user){
+    private User setEmptyExtraUserData(User user) {
         user.setExtraUserData(new ExtraUserData());
         return user;
     }
 
-    private Role findRole(String role){
+    private Role findRole(String role) {
         return roleDao.findFirstByRole(role)
-                .orElseThrow(() -> new RuntimeException("Could not find this role!"));
+                .orElseThrow(() -> new RuntimeException(role + "was not found"));
     }
 
-    public User updateUser(User model, UserUpdateReq dto){
-        return User.builder()
-                .id(model.getId())
-                .login(dto.getLogin().equals(model.getLogin()) || dto.getLogin().isEmpty()
-                        ? model.getLogin() : dto.getLogin())
-                .password(model.getPassword())
-                .build();
-    }
-
-    public User updateUserWithChanger(User model, UserUpdateReq dto){
+    public User updateUserWithChanger(User model, UserUpdateReq dto) {
         return model.changer()
-                .id(model.getId())
-                .login(dto.getLogin().equals(model.getLogin()) || dto.getLogin().isEmpty()
-                        ? model.getLogin() : dto.getLogin())
-                .password(model.getLogin())
+                .login(dto.getLogin())
+                .password(dto.getPassword())
                 .role(model.getRole())
                 .extraUserData(model.getExtraUserData())
                 .change();
     }
 
+    private Optional<User> getOptionalOfUser(String login) {
+        return userDao.findFirstByLogin(login);
+    }
+
+    private Optional<User> getOptionalOfUser(Long id) {
+        return userDao.findById(id);
+    }
+
+    private Optional<User> getOptionalOfUser(String login, String password) {
+        return userDao.findFirstByLoginAndPassword(login, password);
+    }
+
+    private User getUserOrThrowException(Long id) throws UserNotFoundException {
+        return getOptionalOfUser(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    private User getUserOrThrowException(String login) throws UserNotFoundException {
+        return getOptionalOfUser(login)
+                .orElseThrow(() -> new UserNotFoundException(login));
+    }
+
+    private User getUserOrThrowException(String login, String password) throws UserNotFoundException {
+        return getOptionalOfUser(login, password)
+                .orElseThrow(() -> new UserNotFoundException(login, password));
+    }
 }
