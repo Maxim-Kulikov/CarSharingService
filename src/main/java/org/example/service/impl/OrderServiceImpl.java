@@ -2,8 +2,8 @@ package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import org.example.controller.exception.CarNotFoundException;
-import org.example.controller.exception.UserNotFoundException;
+import org.example.dto.exception.CarNotFoundException;
+import org.example.dto.exception.UserNotFoundException;
 import org.example.dto.orderDTO.OrderFilterReq;
 import org.example.repository.OrderDao;
 import org.example.repository.car.CarDao;

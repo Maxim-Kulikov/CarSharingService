@@ -2,8 +2,7 @@ package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import org.example.controller.exception.RoleNotFoundException;
-import org.example.controller.exception.UserNotFoundException;
+import org.example.dto.exception.UserNotFoundException;
 import org.example.repository.RoleDao;
 import org.example.repository.user.UserDao;
 import org.example.dto.userDTO.UserAuthReq;

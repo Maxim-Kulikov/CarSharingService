@@ -1,4 +1,4 @@
-package org.example.controller.exception;
+package org.example.dto.exception;
 
 public class CarNotFoundException extends Exception {
     public CarNotFoundException(Integer id){

@@ -1,6 +1,10 @@
 package org.example.controller.user;
 
 import lombok.AllArgsConstructor;
+import org.example.dto.carDTO.CarFilterReq;
+import org.example.dto.sortenum.SortField;
+import org.example.dto.sortenum.SortOrder;
+import org.example.dto.userDTO.ExtraUserDataFilterReq;
 import org.example.dto.userDTO.ExtraUserDataResp;
 import org.example.dto.userDTO.ExtraUserDataUpdateReq;
 import org.example.service.ExtraUserDataService;
@@ -22,12 +26,12 @@ public class ExtraUserDataController {
     }
 
     @GetMapping("/{id}")
-    public ExtraUserDataResp get(@PathVariable Long id) {
-        return extraUserDataService.get(id);
+    public List<ExtraUserDataResp> get(@PathVariable Long id) {
+        return List.of(extraUserDataService.get(id));
     }
 
-    @GetMapping("")
-    public List<ExtraUserDataResp> getAll() {
-        return extraUserDataService.getAll();
+    @GetMapping()
+    public List<ExtraUserDataResp> get(@RequestBody ExtraUserDataFilterReq filter) {
+        return extraUserDataService.getAll(filter);
     }
 }

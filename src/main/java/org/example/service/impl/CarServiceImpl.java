@@ -1,7 +1,11 @@
 package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.example.comparator.CarComparator;
 import org.example.dto.carDTO.*;
+import org.example.dto.exception.MarkNotFoundException;
+import org.example.dto.exception.ModelNotFoundException;
 import org.example.dto.sortenum.SortField;
 import org.example.dto.sortenum.SortOrder;
 import org.example.repository.car.CarDao;
@@ -14,13 +18,14 @@ import org.example.model.Car;
 import org.example.model.CarMark;
 import org.example.model.CarModel;
 import org.example.service.CarService;
+import org.example.util.SortParamsValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -52,7 +57,7 @@ public class CarServiceImpl implements CarService {
 
     @Transactional
     @Override
-    public CarDescriptionResp update(CarUpdateReq dto, Integer id) {
+    public CarDescriptionResp update(CarUpdateReq dto, Integer id) throws MarkNotFoundException, ModelNotFoundException {
         Car car = carDao.findFirstById(id)
                 .orElseThrow(() -> new RuntimeException("Could not find car by this id!"));
         CarModel carModel = saveOrGetExisted(dto.getMark(), dto.getModel());
@@ -89,7 +94,7 @@ public class CarServiceImpl implements CarService {
 
     @Transactional
     @Override
-    public CarDescriptionResp save(CarCreateReq dto) {
+    public CarDescriptionResp save(CarCreateReq dto) throws MarkNotFoundException, ModelNotFoundException {
         String mark = dto.getMark(),
                 model = dto.getModel();
         CarModel carModel = saveOrGetExisted(mark, model);
@@ -105,31 +110,34 @@ public class CarServiceImpl implements CarService {
         carDao.deleteById(id);
     }
 
-    private CarModel saveOrGetExisted(String mark, String model) {
+    private CarModel saveOrGetExisted(String mark, String model) throws ModelNotFoundException, MarkNotFoundException {
         if (mark == null || model == null)
             return null;
 
-        CarMark carMark = null;
-        CarModel carModel = null;
+        CarMark carMark;
+        CarModel carModel;
 
         if (!carModelDao.existsCarModelByModelAndMark_Mark(model, mark)) {
             carMark = carMarkDao.existsCarMarkByMark(mark)
-                    ? carMarkDao.findCarMarkByMark(mark).get() : carMarkDao.save(carMarkMapper.toCarMark(mark));
+                    ? carMarkDao.findCarMarkByMark(mark)
+                    .orElseThrow(() -> new MarkNotFoundException(mark)) : carMarkDao.save(carMarkMapper.toCarMark(mark));
             carModel = carModelMapper.toCarModel(model, carMark);
             carModelDao.save(carModel);
         } else {
-            carModel = carModelDao.findCarModelByModelAndMark_Mark(model, mark).get();
+            carModel = carModelDao.findCarModelByModelAndMark_Mark(model, mark)
+                    .orElseThrow(() -> new ModelNotFoundException(model, mark));
         }
-        return carModel;
+        return Optional.of(carModel).orElseThrow(() -> new ModelNotFoundException(model, mark));
     }
 
     private List<Car> filterCars(List<Car> cars, CarFilterReq filter) {
+        FilterData filterData = throwExceptionIfFilterNotCorrectOrGetData(filter);
+        SortOrder sortOrder = filterData.sortParams.getSortOrder();
+        SortField sortField = filterData.sortParams.getSortField();
+        Integer minPrice = filter.getMinPrice();
+        Integer maxPrice = filterData.getMaxPrice();
         List<Integer> modelIds = filter.getIdModels();
         List<Integer> markIds = filter.getIdMarks();
-        Integer minPrice = filter.getMinPrice();
-        Integer maxPrice = filter.getMaxPrice();
-        SortOrder sortOrder = filter.getSortOrder();
-        SortField sortField = filter.getSortField();
 
         Stream<Car> stream = cars.stream().filter(car -> {
             if (!(modelIds == null
@@ -156,44 +164,38 @@ public class CarServiceImpl implements CarService {
             return true;
         });
 
-        return sortField != null && sortOrder != null ? stream.sorted(new Comparator<Car>() {
-            @Override
-            public int compare(Car o1, Car o2) {
-                if (sortField == SortField.mark) {
-                    if (sortOrder == SortOrder.asc) {
-                        return compareMarks(o1, o2);
-                    }
-                    return compareMarks(o2, o1);
-                }
-
-                if (sortField == SortField.model) {
-                    if (sortOrder == SortOrder.asc) {
-                        return compareModels(o1, o2);
-                    }
-                    return compareModels(o2, o1);
-                }
-
-                if (sortOrder == SortOrder.asc) {
-                    return comparePrices(o1, o2);
-                }
-                return comparePrices(o2, o1);
-            }
-
-            private int compareMarks(Car o1, Car o2) {
-                return o1.getCarModel().getMark().getMark().compareTo(o2.getCarModel().getMark().getMark());
-            }
-
-            private int compareModels(Car o1, Car o2) {
-                return o1.getCarModel().getModel().compareTo(o2.getCarModel().getModel());
-            }
-
-            private int comparePrices(Car o1, Car o2) {
-                return o1.getPrice() - o2.getPrice();
-            }
-        }).collect(Collectors.toList())
+        return sortField != null && sortOrder != null ?
+                stream.sorted(new CarComparator(sortField, sortOrder)).collect(Collectors.toList())
                 : stream.collect(Collectors.toList());
     }
 
+    private FilterData throwExceptionIfFilterNotCorrectOrGetData(CarFilterReq filter) {
+        Integer minPrice = filter.getMinPrice();
+        Integer maxPrice = filter.getMaxPrice();
+        String sortFieldStr = filter.getSortField();
+        String sortOrderStr = filter.getSortOrder();
+        String message = "";
+
+        if ((maxPrice != null && maxPrice < 0) || (minPrice != null && minPrice < 0)) {
+            message = "Minimal price and maximal price should have positive value\n";
+        } else if (minPrice != null && maxPrice!= null && maxPrice < minPrice) {
+            message = "Minimal price should be more then maximal\n";
+        }
+
+        SortParamsValidator.Data sortParams = null;
+        try {
+            sortParams = SortParamsValidator
+                    .throwExceptionIfIncorrectInputOrElseGetData(sortOrderStr, sortFieldStr);
+        } catch (RuntimeException e) {
+            message += e.getMessage();
+        }
+
+        if (!message.isEmpty()) {
+            throw new RuntimeException(message);
+        }
+
+        return new FilterData(sortParams, minPrice, maxPrice);
+    }
 
     private Car updateCar(CarUpdateReq dto, Car car, CarModel model) {
         return Car.builder()
@@ -221,5 +223,13 @@ public class CarServiceImpl implements CarService {
                 .price(dto.getPrice().equals(car.getPrice()) || dto.getPrice() == null
                         ? car.getPrice() : dto.getPrice())
                 .change();
+    }
+
+    @AllArgsConstructor
+    @Getter
+    private static class FilterData {
+        private SortParamsValidator.Data sortParams;
+        private Integer minPrice;
+        private Integer maxPrice;
     }
 }

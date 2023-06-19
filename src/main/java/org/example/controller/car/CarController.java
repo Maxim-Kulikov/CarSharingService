@@ -2,11 +2,11 @@ package org.example.controller.car;
 
 import lombok.AllArgsConstructor;
 import org.example.dto.carDTO.*;
+import org.example.dto.exception.MarkNotFoundException;
+import org.example.dto.exception.ModelNotFoundException;
 import org.example.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class CarController {
     @Autowired
     private final CarService carService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/description/{id}")
     public CarDescriptionResp getDescription(@PathVariable Integer id) {
         return carService.getCarDescription(id);
     }
@@ -33,12 +33,12 @@ public class CarController {
     }
 
     @PostMapping("/save")
-    public CarDescriptionResp save(@RequestBody CarCreateReq dto) {
+    public CarDescriptionResp save(@RequestBody CarCreateReq dto) throws MarkNotFoundException, ModelNotFoundException {
         return carService.save(dto);
     }
 
     @PatchMapping("/update/{id}")
-    public CarDescriptionResp update(@RequestBody CarUpdateReq dto, @PathVariable Integer id) {
+    public CarDescriptionResp update(@RequestBody CarUpdateReq dto, @PathVariable Integer id) throws MarkNotFoundException, ModelNotFoundException {
         return carService.update(dto, id);
     }
 

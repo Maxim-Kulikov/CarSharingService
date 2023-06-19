@@ -1,19 +1,20 @@
 package org.example.service;
 
+import org.example.dto.exception.PhotoNotFoundException;
 import org.example.dto.photoDTO.PhotoRespDto;
 import org.example.dto.photoDTO.SavePhotoDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
 
 @Service
 public interface PhotoService {
-    List<PhotoRespDto> getAll(Integer idCar);
+    ResponseEntity<List<PhotoRespDto>> getAll(Integer idCar);
 
-    List<PhotoRespDto> getAll();
+    void save(MultipartFile file, Integer idCar) throws IOException;
 
-    void save(SavePhotoDto dto) throws IOException;
-
-    PhotoRespDto get(String id);
+    ResponseEntity<PhotoRespDto> get(String id);
 }

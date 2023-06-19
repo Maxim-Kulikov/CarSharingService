@@ -2,18 +2,28 @@ package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import org.example.comparator.CarComparator;
+import org.example.comparator.ExtraUserDataComparator;
+import org.example.dto.sortenum.SortField;
+import org.example.dto.sortenum.SortOrder;
+import org.example.dto.userDTO.ExtraUserDataFilterReq;
+import org.example.model.Car;
 import org.example.repository.user.ExtraUserDao;
 import org.example.dto.userDTO.ExtraUserDataResp;
 import org.example.dto.userDTO.ExtraUserDataUpdateReq;
 import org.example.mapper.user.ExtraUserDataMapper;
 import org.example.model.ExtraUserData;
 import org.example.service.ExtraUserDataService;
+import org.example.util.SortParamsValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Service
 @Transactional
 @EqualsAndHashCode
@@ -26,8 +36,10 @@ public class ExtraUserDataServiceImpl implements ExtraUserDataService {
     private final ExtraUserDataMapper extraUserDataMapper;
 
     @Override
-    public List<ExtraUserDataResp> getAll() {
-        return extraUserDataMapper.toExtraUserDataResponseList((List<ExtraUserData>) extraUserDao.findAll());
+    public List<ExtraUserDataResp> getAll(ExtraUserDataFilterReq filter) {
+        return extraUserDataMapper.toExtraUserDataResponseList(
+                filterExtraUserData((List<ExtraUserData>) extraUserDao.findAll(), filter)
+        );
     }
 
     @Override
@@ -46,7 +58,37 @@ public class ExtraUserDataServiceImpl implements ExtraUserDataService {
         );
     }
 
-    private ExtraUserData updateExtraUserData(ExtraUserData model, ExtraUserDataUpdateReq dto){
+    private List<ExtraUserData> filterExtraUserData(List<ExtraUserData> list, ExtraUserDataFilterReq filter) {
+        SortParamsValidator.Data sortParams = SortParamsValidator
+                .throwExceptionIfIncorrectInputOrElseGetData(filter.getSortOrder(), filter.getSortField());
+        List<String> names = filter.getNames();
+        List<String> lastnames = filter.getLastnames();
+        SortOrder sortOrder = sortParams.getSortOrder();
+        SortField sortField = sortParams.getSortField();
+
+        Stream<ExtraUserData> stream = list.stream().filter(data -> {
+            if (!(names == null
+                    || names.isEmpty()
+                    || names.contains(data.getName()))
+            ) {
+                return false;
+            }
+
+            if (!(lastnames == null
+                    || lastnames.isEmpty()
+                    || lastnames.contains(data.getLastname()))
+            ) {
+                return false;
+            }
+            return true;
+        });
+
+        return sortField != null && sortOrder != null ?
+                stream.sorted(new ExtraUserDataComparator(sortField, sortOrder)).collect(Collectors.toList())
+                : stream.collect(Collectors.toList());
+    }
+
+    private ExtraUserData updateExtraUserData(ExtraUserData model, ExtraUserDataUpdateReq dto) {
         return ExtraUserData.builder()
                 .id(model.getId())
                 .phone(dto.getPhone().equals(model.getPhone()) || dto.getPhone().isEmpty()
@@ -66,7 +108,7 @@ public class ExtraUserDataServiceImpl implements ExtraUserDataService {
                 .build();
     }
 
-    private ExtraUserData updateExtraUserDataWithChanger(ExtraUserData model, ExtraUserDataUpdateReq dto){
+    private ExtraUserData updateExtraUserDataWithChanger(ExtraUserData model, ExtraUserDataUpdateReq dto) {
         return model.changer()
                 .id(model.getId())
                 .phone(dto.getPhone().equals(model.getPhone()) || dto.getPhone().isEmpty()

@@ -1,7 +1,7 @@
 package org.example.controller.user;
 
 import lombok.AllArgsConstructor;
-import org.example.controller.exception.UserNotFoundException;
+import org.example.dto.exception.UserNotFoundException;
 import org.example.dto.userDTO.UserAuthReq;
 import org.example.dto.userDTO.UserExistedResp;
 import org.example.dto.userDTO.UserUpdateReq;
@@ -18,8 +18,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/{id}")
+    public List<UserExistedResp> get(@PathVariable Long id) throws UserNotFoundException {
+        return List.of(userService.getExistedUser(id));
+    }
+
     @GetMapping("")
-    public List<UserExistedResp> getAll() {
+    public List<UserExistedResp> get() throws UserNotFoundException {
         return userService.getAll();
     }
 
@@ -39,11 +44,6 @@ public class UserController {
     @PatchMapping("/update/{id}")
     public UserExistedResp update(@RequestBody UserUpdateReq dto, @PathVariable Long id) throws UserNotFoundException {
         return userService.update(dto, id);
-    }
-
-    @GetMapping("/{id}")
-    public UserExistedResp get(@PathVariable Long id) throws UserNotFoundException {
-        return userService.getExistedUser(id);
     }
 
     /*@PostMapping("/get/jwt")

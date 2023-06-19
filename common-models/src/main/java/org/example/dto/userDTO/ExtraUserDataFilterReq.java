@@ -1,21 +1,19 @@
-package org.example.dto.carDTO;
+package org.example.dto.userDTO;
 
 import lombok.*;
 import org.example.dto.sortenum.SortField;
 import org.example.dto.sortenum.SortOrder;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 @Builder
-public class CarFilterReq {
-    private ArrayList<Integer> idMarks;
-    private ArrayList<Integer> idModels;
-    private Integer minPrice;
-    private Integer maxPrice;
+public class ExtraUserDataFilterReq {
+    private List<String> names;
+    private List<String> lastnames;
     private String sortField;
     private String sortOrder;
 }

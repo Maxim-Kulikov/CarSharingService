@@ -1,8 +1,8 @@
 package org.example.controller.order;
 
 import lombok.AllArgsConstructor;
-import org.example.controller.exception.CarNotFoundException;
-import org.example.controller.exception.UserNotFoundException;
+import org.example.dto.exception.CarNotFoundException;
+import org.example.dto.exception.UserNotFoundException;
 import org.example.dto.orderDTO.OrderCreateReq;
 import org.example.dto.orderDTO.OrderFilterReq;
 import org.example.dto.orderDTO.OrderResp;

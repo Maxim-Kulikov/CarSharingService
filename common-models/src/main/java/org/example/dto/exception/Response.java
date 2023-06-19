@@ -1,4 +1,4 @@
-package org.example.controller.exception;
+package org.example.dto.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

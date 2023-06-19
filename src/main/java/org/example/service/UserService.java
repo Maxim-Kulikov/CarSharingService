@@ -1,11 +1,9 @@
 package org.example.service;
 
-import org.example.controller.exception.UserNotFoundException;
-import org.example.dto.JwtTokenResp;
+import org.example.dto.exception.UserNotFoundException;
 import org.example.dto.userDTO.UserAuthReq;
 import org.example.dto.userDTO.UserExistedResp;
 import org.example.dto.userDTO.UserUpdateReq;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
