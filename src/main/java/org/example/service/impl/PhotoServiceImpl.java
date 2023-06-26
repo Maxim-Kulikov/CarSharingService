@@ -2,12 +2,14 @@ package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import org.example.dto.exception.CarNotFoundException;
 import org.example.dto.exception.PhotoNotFoundException;
 import org.example.dto.exception.Response;
 import org.example.dto.photoDTO.PhotoRespDto;
 import org.example.dto.photoDTO.SavePhotoDto;
 import org.example.feign.PhotoGetterClient;
 import org.example.kafka.producer.PhotoProducer;
+import org.example.repository.car.CarDao;
 import org.example.service.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,14 +24,13 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-@Transactional
-@EqualsAndHashCode
-@ComponentScan("org.example")
 public class PhotoServiceImpl implements PhotoService {
     @Autowired
     private final PhotoGetterClient photoGetterClient;
     @Autowired
     private final PhotoProducer photoProducer;
+    @Autowired
+    private final CarDao carDao;
 
     @Override
     @Transactional
@@ -39,7 +40,10 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     @Transactional
-    public void save(MultipartFile file, Integer idCar) throws IOException {
+    public void save(MultipartFile file, Integer idCar) throws IOException, CarNotFoundException {
+        if (!carDao.existsById(idCar)) {
+            throw new CarNotFoundException(idCar);
+        }
         photoProducer.send(idCar, file);
     }
 

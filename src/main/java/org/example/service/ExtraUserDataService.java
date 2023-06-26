@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.dto.exception.UserNotFoundException;
 import org.example.dto.userDTO.ExtraUserDataFilterReq;
 import org.example.dto.userDTO.ExtraUserDataResp;
 import org.example.dto.userDTO.ExtraUserDataUpdateReq;
@@ -11,8 +12,8 @@ import java.util.List;
 public interface ExtraUserDataService {
     List<ExtraUserDataResp> getAll(ExtraUserDataFilterReq filter);
 
-    ExtraUserDataResp update(ExtraUserDataUpdateReq dto, Long id);
+    ExtraUserDataResp update(ExtraUserDataUpdateReq dto, Long id) throws UserNotFoundException;
 
-    ExtraUserDataResp get(Long id);
+    ExtraUserDataResp get(Long id) throws UserNotFoundException;
 
 }

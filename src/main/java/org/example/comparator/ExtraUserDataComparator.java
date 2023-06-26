@@ -16,12 +16,18 @@ public class ExtraUserDataComparator implements Comparator<ExtraUserData> {
     @Override
     public int compare(ExtraUserData o1, ExtraUserData o2) {
         if (sortField == SortField.name) {
+            if(o1.getName() == null || o2.getName() == null) {
+                return 1;
+            }
             if (sortOrder == SortOrder.asc) {
                 return compareNames(o1, o2);
             }
             return compareNames(o2, o1);
         }
 
+        if(o1.getLastname() == null || o2.getLastname() == null) {
+            return 1;
+        }
         if (sortOrder == SortOrder.asc) {
             return compareLastnames(o1, o2);
         }

@@ -2,6 +2,7 @@ package org.example.controller.user;
 
 import lombok.AllArgsConstructor;
 import org.example.dto.carDTO.CarFilterReq;
+import org.example.dto.exception.UserNotFoundException;
 import org.example.dto.sortenum.SortField;
 import org.example.dto.sortenum.SortOrder;
 import org.example.dto.userDTO.ExtraUserDataFilterReq;
@@ -9,6 +10,8 @@ import org.example.dto.userDTO.ExtraUserDataResp;
 import org.example.dto.userDTO.ExtraUserDataUpdateReq;
 import org.example.service.ExtraUserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,17 +24,17 @@ public class ExtraUserDataController {
     private final ExtraUserDataService extraUserDataService;
 
     @PatchMapping("/update/{id}")
-    public ExtraUserDataResp update(@RequestBody ExtraUserDataUpdateReq dto, @PathVariable Long id) {
-        return extraUserDataService.update(dto, id);
+    public ResponseEntity<ExtraUserDataResp> update(@RequestBody ExtraUserDataUpdateReq dto, @PathVariable Long id) throws UserNotFoundException {
+        return new ResponseEntity<>(extraUserDataService.update(dto, id), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public List<ExtraUserDataResp> get(@PathVariable Long id) {
-        return List.of(extraUserDataService.get(id));
+    public ResponseEntity<ExtraUserDataResp> get(@PathVariable Long id) throws UserNotFoundException {
+        return new ResponseEntity<>(extraUserDataService.get(id), HttpStatus.OK);
     }
 
-    @GetMapping()
-    public List<ExtraUserDataResp> get(@RequestBody ExtraUserDataFilterReq filter) {
-        return extraUserDataService.getAll(filter);
+    @PostMapping("")
+    public ResponseEntity<List<ExtraUserDataResp>> get(@RequestBody ExtraUserDataFilterReq filter) {
+        return new ResponseEntity<>(extraUserDataService.getAll(filter), HttpStatus.OK);
     }
 }

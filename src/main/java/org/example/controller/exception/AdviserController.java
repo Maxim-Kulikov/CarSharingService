@@ -49,6 +49,16 @@ public class AdviserController extends ResponseEntityExceptionHandler {
         return getResponseEntity(e, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(UserIsNotAdminException.class)
+    public ResponseEntity<Response> handleUserIsNotAdminException(UserIsNotAdminException e) {
+        return getResponseEntity(e, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(UserIsExistedException.class)
+    public ResponseEntity<Response> handleUserIsExistedException(UserIsExistedException e) {
+        return getResponseEntity(e, HttpStatus.OK);
+    }
+
     private ResponseEntity<Response> getResponseEntity(Exception e, HttpStatus httpStatus) {
         Response response = new Response();
         response.setMessage(e.getMessage());

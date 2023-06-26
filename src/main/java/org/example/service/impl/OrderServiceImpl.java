@@ -1,8 +1,9 @@
 package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import org.example.dto.exception.CarNotFoundException;
+import org.example.dto.exception.OrderNotFoundException;
+import org.example.dto.exception.UserIsNotAdminException;
 import org.example.dto.exception.UserNotFoundException;
 import org.example.dto.orderDTO.OrderFilterReq;
 import org.example.repository.OrderDao;
@@ -16,7 +17,6 @@ import org.example.model.Order;
 import org.example.model.User;
 import org.example.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,12 +24,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
-@EqualsAndHashCode
 @AllArgsConstructor
-@ComponentScan("org.example")
 public class OrderServiceImpl implements OrderService {
 
+    private final Short ROLE_ADMIN_ID = 1;
     @Autowired
     private final OrderDao orderDao;
     @Autowired
@@ -40,6 +38,7 @@ public class OrderServiceImpl implements OrderService {
     private final CarDao carDao;
 
 
+    @Transactional
     @Override
     public List<OrderResp> getAll(OrderFilterReq filter) {
         return orderMapper.toListOrderCreationResponses(
@@ -50,6 +49,7 @@ public class OrderServiceImpl implements OrderService {
                         ).collect(Collectors.toList()));
     }
 
+    @Transactional
     @Override
     public OrderResp save(OrderCreateReq dto) throws UserNotFoundException, CarNotFoundException {
         Long idUser = dto.getIdUser();
@@ -70,47 +70,60 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toOrderResp(order);
     }
 
-    //TODO нету реализации в update
+    @Transactional
     @Override
-    public Long update(OrderResp dto) {
-        return null;
-
+    public OrderResp update(OrderResp dto) throws OrderNotFoundException, UserNotFoundException, CarNotFoundException {
+        Order order = orderDao.findById(dto.getId())
+                .orElseThrow(() -> new OrderNotFoundException(dto.getId()));
+        updateOrder(dto, order);
+        orderDao.save(order);
+        return orderMapper.toOrderResp(order);
     }
 
+    @Transactional
     @Override
-    public void delete(Long id) {
+    public void delete(Long id) throws OrderNotFoundException {
+        if (!orderDao.existsById(id)) {
+            throw new OrderNotFoundException(id);
+        }
         orderDao.deleteById(id);
     }
 
+    @Transactional
     @Override
-    public Long allowOrder(Long idOrder, Long idAdmin, Boolean status) throws UserNotFoundException {
+    public OrderResp allowOrder(Long idOrder, Long idAdmin, Boolean status, String refuseReason) throws UserNotFoundException, UserIsNotAdminException, OrderNotFoundException {
         User admin = userDao.findById(idAdmin)
                 .orElseThrow(() -> new UserNotFoundException(idAdmin));
+
+        if (!admin.getRole().getId().equals(ROLE_ADMIN_ID)) {
+            throw new UserIsNotAdminException(idAdmin);
+        }
+
         Order order = orderDao.findById(idOrder)
-                .orElseThrow(() -> new RuntimeException("Could not find order by this id!"));
+                .orElseThrow(() -> new OrderNotFoundException(idOrder));
         order.setAdmin(admin);
         order.setStatus(status);
+
+        if (!status) {
+            if (refuseReason == null || refuseReason.isBlank()) {
+                throw new RuntimeException("You did not write the reason of refuse");
+            }
+            order.setRefuseReason(refuseReason);
+        }
         orderDao.save(order);
-        return order.getId();
+        return orderMapper.toOrderResp(order);
     }
 
-    //TODO доделать updateOrder
-    /*private Order updateOrder(OrderResp dto, Order model) {
+    private Order updateOrder(OrderResp dto, Order model) throws UserNotFoundException, CarNotFoundException {
         return model.changer()
-                .id(model.getId())
-                .admin(dto.getAdminLogin().equals(model.getAdmin()) || dto.getAdminLogin() == null
-                        ? model.getAdmin() : dto.())
-                .price(dto.getPrice().equals(model.getPrice()) || dto.getPrice() == null
-                        ? model.getPrice() : dto.getPrice())
-                .startDate(dto.getStartDate().equals(model.getStartDate()) || dto.getStartDate() == null
-                        ? model.getStartDate() : dto.getStartDate())
-                .finishDate(dto.getFinishDate().equals(model.getFinishDate()) || dto.getFinishDate() == null
-                        ? model.getFinishDate() : dto.getFinishDate())
-                .status(dto.getStatus().equals(model.getStatus()) || dto.getStatus() == null
-                        ? model.getStatus() : dto.getStatus())
-                .refuseReason(dto.getRefuseReason().equals(model.getRefuseReason()) || dto.getRefuseReason() == null
-                        ? model.getRefuseReason() : dto.getRefuseReason())
-                //.car(dto.get)
+                .admin(userDao.findById(dto.getIdAdmin())
+                        .orElseThrow(() -> new UserNotFoundException(dto.getIdAdmin())))
+                .price(dto.getPrice())
+                .startDate(dto.getStartDate())
+                .finishDate(dto.getFinishDate())
+                .status(dto.getStatus())
+                .refuseReason(dto.getRefuseReason())
+                .car(carDao.findById(dto.getIdCar()).orElseThrow(() -> new CarNotFoundException(dto.getIdCar())))
                 .change();
-    }*/
+    }
 }

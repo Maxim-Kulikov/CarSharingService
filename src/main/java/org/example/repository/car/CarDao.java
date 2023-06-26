@@ -16,6 +16,4 @@ public interface CarDao extends CrudRepository<Car, Integer> {
     List<Car> findAllByCarModel_Model(String model);
     List<Car> findAllByCarModel_Mark_Mark(String mark);
     List<Car> findAllByCarModel_ModelAndCarModel_Mark_Mark(String model, String mark);
-
-
 }

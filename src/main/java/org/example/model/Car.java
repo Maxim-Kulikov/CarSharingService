@@ -5,14 +5,10 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-
 @Entity
 @Table(name = "cars")
 public class Car {
@@ -35,33 +31,50 @@ public class Car {
     @Column(name = "limitations")
     private String limitations;
 
-    public Changer changer(){
+    public Changer changer() {
         return new Changer();
     }
 
-    public class Changer{
-        public Changer id(Integer id){
-            Car.this.id = id;
+    public class Changer {
+
+        private Changer() {
+        }
+
+        public Car.Changer carModel(CarModel carModel) {
+            if (carModel != null
+                    && carModel.getModel() != null
+                    && !carModel.getModel().isBlank()
+                    && carModel.getMark() != null
+                    && !carModel.getMark().getMark().isBlank()) {
+                Car.this.carModel = carModel;
+            }
             return this;
         }
-        public Changer carModel(CarModel carModel){
-            Car.this.carModel = carModel;
+
+        public Car.Changer carNumber(String carNumber) {
+            if (!Car.this.carNumber.equals(carNumber) && carNumber != null) {
+                Car.this.carNumber = carNumber;
+            }
             return this;
         }
-        public Changer carNumber(String carNumber){
-            Car.this.carNumber = carNumber;
+
+        public Car.Changer price(Integer price) {
+            if (!Car.this.price.equals(price) && price != null) {
+                Car.this.price = price;
+            }
             return this;
         }
-        public Changer price(Integer price){
-            Car.this.price = price;
+
+        public Car.Changer limitations(String limitations) {
+            if (!Car.this.limitations.equals(limitations) && limitations != null) {
+                Car.this.limitations = limitations;
+            }
             return this;
         }
-        public Changer limitations(String limitations){
-            Car.this.limitations = limitations;
-            return this;
-        }
-        public Car change(){
+
+        public Car change() {
             return Car.this;
         }
     }
+
 }

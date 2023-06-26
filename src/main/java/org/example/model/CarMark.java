@@ -6,14 +6,10 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-
 @Entity
 @Table(name = "cars_marks")
 public class CarMark {

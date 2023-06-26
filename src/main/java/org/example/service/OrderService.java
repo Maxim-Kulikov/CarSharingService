@@ -1,6 +1,8 @@
 package org.example.service;
 
 import org.example.dto.exception.CarNotFoundException;
+import org.example.dto.exception.OrderNotFoundException;
+import org.example.dto.exception.UserIsNotAdminException;
 import org.example.dto.exception.UserNotFoundException;
 import org.example.dto.orderDTO.OrderCreateReq;
 import org.example.dto.orderDTO.OrderFilterReq;
@@ -15,9 +17,9 @@ public interface OrderService {
 
     OrderResp save(OrderCreateReq dto) throws UserNotFoundException, CarNotFoundException;
 
-    Long update(OrderResp dto);
+    OrderResp update(OrderResp dto) throws OrderNotFoundException, UserNotFoundException, CarNotFoundException;
 
-    void delete(Long id);
+    void delete(Long id) throws OrderNotFoundException;
 
-    Long allowOrder(Long idOrder, Long idAdmin, Boolean statusBoolean) throws UserNotFoundException;
+    OrderResp allowOrder(Long idOrder, Long idAdmin, Boolean statusBoolean, String refuseReason) throws UserNotFoundException, UserIsNotAdminException, OrderNotFoundException;
 }

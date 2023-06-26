@@ -6,14 +6,10 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.sql.Date;
 
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-
 @Entity
 @Table(name = "extra_users_data")
 public class ExtraUserData {
@@ -44,63 +40,88 @@ public class ExtraUserData {
     @Column(name = "register_date")
     private Date registerDate;
 
-    public Changer changer() {
+    public Changer changer(){
         return new Changer();
     }
 
     public class Changer {
-        public Changer id(Long id) {
-            if (id != null) {
-                ExtraUserData.this.id = id;
-            }
-            return this;
+
+        private Changer() {
         }
 
-        public Changer passportNumber(String passportNumber) {
-            if (!passportNumber.isBlank()) {
+        public ExtraUserData.Changer passportNumber(String passportNumber) {
+            if (ExtraUserData.this.passportNumber == null) {
+                ExtraUserData.this.passportNumber = passportNumber;
+                return this;
+            }
+            if (!ExtraUserData.this.passportNumber.equals(passportNumber) && passportNumber != null) {
                 ExtraUserData.this.passportNumber = passportNumber;
             }
             return this;
         }
 
-        public Changer name(String name) {
-            if (!name.isBlank()) {
+        public ExtraUserData.Changer name(String name) {
+            if (ExtraUserData.this.name == null) {
+                ExtraUserData.this.name = name;
+                return this;
+            }
+            if (!ExtraUserData.this.name.equals(name) && name != null) {
                 ExtraUserData.this.name = name;
             }
             return this;
         }
 
-        public Changer lastname(String lastname) {
-            if (!lastname.isBlank()) {
+        public ExtraUserData.Changer lastname(String lastname) {
+            if (ExtraUserData.this.lastname == null) {
+                ExtraUserData.this.lastname = lastname;
+                return this;
+            }
+            if (!ExtraUserData.this.lastname.equals(lastname) && lastname != null) {
                 ExtraUserData.this.lastname = lastname;
             }
             return this;
         }
 
-        public Changer birthdate(Date birthdate) {
-            if (birthdate != null) {
+        public ExtraUserData.Changer birthdate(Date birthdate) {
+            if (ExtraUserData.this.birthdate == null) {
+                ExtraUserData.this.birthdate = birthdate;
+                return this;
+            }
+            if (!ExtraUserData.this.birthdate.equals(birthdate) && birthdate != null) {
                 ExtraUserData.this.birthdate = birthdate;
             }
             return this;
         }
 
-        public Changer drivingLicense(String drivingLicense) {
-            if (!drivingLicense.isBlank()) {
+        public ExtraUserData.Changer drivingLicense(String drivingLicense) {
+            if (ExtraUserData.this.drivingLicense == null) {
+                ExtraUserData.this.drivingLicense = drivingLicense;
+                return this;
+            }
+            if (!ExtraUserData.this.drivingLicense.equals(drivingLicense) && drivingLicense != null) {
                 ExtraUserData.this.drivingLicense = drivingLicense;
             }
             return this;
         }
 
-        public Changer phone(String phone) {
-            if (!phone.isBlank()) {
-                ExtraUserData.this.phone = phone;
+        public ExtraUserData.Changer registerDate(Date registerDate) {
+            if (ExtraUserData.this.registerDate == null) {
+                ExtraUserData.this.registerDate = registerDate;
+                return this;
+            }
+            if (!ExtraUserData.this.registerDate.equals(registerDate) && registerDate != null) {
+                ExtraUserData.this.registerDate = registerDate;
             }
             return this;
         }
 
-        public Changer registerDate(Date registerDate) {
-            if (registerDate != null) {
-                ExtraUserData.this.registerDate = registerDate;
+        public ExtraUserData.Changer phone(String phone) {
+            if (ExtraUserData.this.phone == null) {
+                ExtraUserData.this.phone = phone;
+                return this;
+            }
+            if (!ExtraUserData.this.phone.equals(phone) && phone != null) {
+                ExtraUserData.this.phone = phone;
             }
             return this;
         }
@@ -109,4 +130,5 @@ public class ExtraUserData {
             return ExtraUserData.this;
         }
     }
+
 }

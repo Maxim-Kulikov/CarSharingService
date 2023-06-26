@@ -1,6 +1,7 @@
 package org.example.controller.photo;
 
 import lombok.AllArgsConstructor;
+import org.example.dto.exception.CarNotFoundException;
 import org.example.dto.exception.PhotoNotFoundException;
 import org.example.dto.photoDTO.PhotoRespDto;
 import org.example.dto.photoDTO.SavePhotoDto;
@@ -23,7 +24,7 @@ public class PhotoController {
     private final PhotoService photoService;
 
     @PostMapping(value = "/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void save(@RequestParam MultipartFile file, @RequestParam(name = "id-car")Integer idCar) throws IOException {
+    public void save(@RequestParam MultipartFile file, @RequestParam(name = "id-car")Integer idCar) throws IOException, CarNotFoundException {
         photoService.save(file, idCar);
     }
 
@@ -33,7 +34,7 @@ public class PhotoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PhotoRespDto> get(@PathVariable String id) throws PhotoNotFoundException {
+    public ResponseEntity<PhotoRespDto> get(@PathVariable String id)  {
         return photoService.get(id);
     }
 

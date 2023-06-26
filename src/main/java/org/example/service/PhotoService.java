@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.dto.exception.CarNotFoundException;
 import org.example.dto.exception.PhotoNotFoundException;
 import org.example.dto.photoDTO.PhotoRespDto;
 import org.example.dto.photoDTO.SavePhotoDto;
@@ -14,7 +15,7 @@ import java.util.List;
 public interface PhotoService {
     ResponseEntity<List<PhotoRespDto>> getAll(Integer idCar);
 
-    void save(MultipartFile file, Integer idCar) throws IOException;
+    void save(MultipartFile file, Integer idCar) throws IOException, CarNotFoundException;
 
     ResponseEntity<PhotoRespDto> get(String id);
 }

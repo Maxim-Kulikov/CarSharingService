@@ -30,7 +30,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-@ComponentScan("org.example")
 @AllArgsConstructor
 public class CarServiceImpl implements CarService {
     @Autowired
@@ -62,7 +61,7 @@ public class CarServiceImpl implements CarService {
                 .orElseThrow(() -> new RuntimeException("Could not find car by this id!"));
         CarModel carModel = saveOrGetExisted(dto.getMark(), dto.getModel());
 
-        car = updateCarWithChanger(dto, car, carModel);
+        car = update(dto, car, carModel);
         carDao.save(car);
 
         return carMapper.toCarDescriptionResp(car);
@@ -178,7 +177,7 @@ public class CarServiceImpl implements CarService {
 
         if ((maxPrice != null && maxPrice < 0) || (minPrice != null && minPrice < 0)) {
             message = "Minimal price and maximal price should have positive value\n";
-        } else if (minPrice != null && maxPrice!= null && maxPrice < minPrice) {
+        } else if (minPrice != null && maxPrice != null && maxPrice < minPrice) {
             message = "Minimal price should be more then maximal\n";
         }
 
@@ -197,31 +196,12 @@ public class CarServiceImpl implements CarService {
         return new FilterData(sortParams, minPrice, maxPrice);
     }
 
-    private Car updateCar(CarUpdateReq dto, Car car, CarModel model) {
-        return Car.builder()
-                .id(car.getId())
-                .carModel(model == null
-                        ? car.getCarModel() : model)
-                .carNumber(dto.getCarNumber().equals(car.getCarNumber()) || dto.getCarNumber().isEmpty()
-                        ? car.getCarNumber() : dto.getCarNumber())
-                .limitations(dto.getLimitations().equals(car.getLimitations()) || dto.getLimitations().isEmpty()
-                        ? car.getLimitations() : dto.getLimitations())
-                .price(dto.getPrice().equals(car.getPrice()) || dto.getPrice() == null
-                        ? car.getPrice() : dto.getPrice())
-                .build();
-    }
-
-    private Car updateCarWithChanger(CarUpdateReq dto, Car car, CarModel model) {
+    private Car update(CarUpdateReq dto, Car car, CarModel model) {
         return car.changer()
-                .id(car.getId())
-                .carModel(model == null
-                        ? car.getCarModel() : model)
-                .carNumber(dto.getCarNumber().equals(car.getCarNumber()) || dto.getCarNumber().isEmpty()
-                        ? car.getCarNumber() : dto.getCarNumber())
-                .limitations(dto.getLimitations().equals(car.getLimitations()) || dto.getLimitations().isEmpty()
-                        ? car.getLimitations() : dto.getLimitations())
-                .price(dto.getPrice().equals(car.getPrice()) || dto.getPrice() == null
-                        ? car.getPrice() : dto.getPrice())
+                .carModel(model)
+                .carNumber(dto.getCarNumber())
+                .limitations(dto.getLimitations())
+                .price(dto.getPrice())
                 .change();
     }
 

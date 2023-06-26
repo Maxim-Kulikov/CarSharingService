@@ -1,7 +1,7 @@
 package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
+import org.example.dto.exception.UserIsExistedException;
 import org.example.dto.exception.UserNotFoundException;
 import org.example.repository.RoleDao;
 import org.example.repository.user.UserDao;
@@ -14,7 +14,6 @@ import org.example.model.Role;
 import org.example.model.User;
 import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,15 +21,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Transactional
-@EqualsAndHashCode
 @AllArgsConstructor
-@ComponentScan("org.example")
-//@Getter  Не знаю, что лучше, использовать методы или использовать методы через геттер
 public class UserServiceImpl implements UserService {
 
-    private final String ROLE_USER = "ROLE_USER";
-    private final String ROLE_ADMIN = "ROLE_ADMIN";
+    private final Short ROLE_USER = 2;
+    private final Short ROLE_ADMIN = 1;
     @Autowired
     private final UserDao userDao;
     @Autowired
@@ -73,20 +68,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserExistedResp save(UserAuthReq dto) {
-        return Optional.ofNullable(dto)
-                .map(userMapper::toUser)
-                .map(this::setRole)
-                .map(this::setEmptyExtraUserData)
-                .map(userDao::save)
-                .map(userMapper::toUserExistedResp)
-                .orElseThrow(() -> new RuntimeException("Could not save user!"));
-
+    public UserExistedResp save(UserAuthReq dto) throws UserIsExistedException {
+        if (!userDao.existsByLogin(dto.getLogin())) {
+            return Optional.of(dto)
+                    .map(userMapper::toUser)
+                    .map(this::setRole)
+                    .map(this::setEmptyExtraUserData)
+                    .map(userDao::save)
+                    .map(userMapper::toUserExistedResp)
+                    .orElseThrow(() -> new RuntimeException("Could not save user!"));
+        }
+        throw new UserIsExistedException(dto.getLogin());
     }
 
     @Transactional
     @Override
-    public void delete(Long id) {
+    public void delete(Long id) throws UserNotFoundException {
+        if (!userDao.existsById(id)) {
+            throw new UserNotFoundException(id);
+        }
         userDao.deleteById(id);
     }
 
@@ -99,11 +99,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserExistedResp update(UserUpdateReq dto, Long id) throws UserNotFoundException {
+    public UserExistedResp update(UserUpdateReq dto, Long id) throws UserNotFoundException, UserIsExistedException {
         User user = getUserOrThrowException(id);
+        if (userDao.existsByLogin(dto.getLogin())) {
+            throw new UserIsExistedException(dto.getLogin());
+        }
         user = updateUserWithChanger(user, dto);
         userDao.save(user);
         return userMapper.toUserExistedResp(user);
+
     }
 
     @Override
@@ -133,9 +137,9 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private Role findRole(String role) {
-        return roleDao.findFirstByRole(role)
-                .orElseThrow(() -> new RuntimeException(role + "was not found"));
+    private Role findRole(Short id) {
+        return roleDao.getRoleById(id)
+                .orElseThrow(() -> new RuntimeException("Error during getting of role"));
     }
 
     public User updateUserWithChanger(User model, UserUpdateReq dto) {

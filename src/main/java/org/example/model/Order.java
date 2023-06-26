@@ -1,21 +1,15 @@
 package org.example.model;
 
 import lombok.*;
-import org.aspectj.weaver.ast.Or;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Date;
 
-import java.sql.Date;
-
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -52,51 +46,74 @@ public class Order {
     @Column(name = "price")
     private Long price;
 
-    public Changer changer(){
+    public Order.Changer changer() {
         return new Changer();
     }
 
-    public class Changer{
-        public Changer id(Long id){
-            Order.this.id = id;
+    public class Changer {
+
+        private Changer() {
+        }
+
+        public Order.Changer startDate(java.util.Date startDate) {
+            if (!Order.this.startDate.equals(startDate) && startDate != null) {
+                Order.this.startDate = startDate;
+            }
             return this;
         }
-        public Changer startDate(Date date){
-            Order.this.startDate = date;
+
+        public Order.Changer finishDate(java.util.Date finishDate) {
+            if (!Order.this.finishDate.equals(finishDate) && finishDate != null) {
+                Order.this.finishDate = finishDate;
+            }
             return this;
         }
-        public Changer finishDate(Date date){
-            Order.this.finishDate = date;
+
+        public Order.Changer status(Boolean status) {
+            if (!Order.this.status.equals(status) && status != null) {
+                Order.this.status = status;
+            }
             return this;
         }
-        public Changer status(Boolean status){
-            Order.this.status = status;
+
+        public Order.Changer car(Car car) {
+            if (!Order.this.car.equals(car) && car != null) {
+                Order.this.car = car;
+            }
             return this;
         }
-        public Changer car(Car car){
-            Order.this.car = car;
+
+        public Order.Changer user(User user) {
+            if (!Order.this.user.equals(user) && user != null) {
+                Order.this.user = user;
+            }
             return this;
         }
-        public Changer user(User user){
-            Order.this.user = user;
+
+        public Order.Changer admin(User admin) {
+            if (!Order.this.admin.equals(admin) && admin != null) {
+                Order.this.admin = admin;
+            }
             return this;
         }
-        public Changer admin(User admin){
-            Order.this.admin = admin;
+
+        public Order.Changer refuseReason(String refuseReason) {
+            if (!Order.this.refuseReason.equals(refuseReason) && refuseReason != null) {
+                Order.this.refuseReason = refuseReason;
+            }
             return this;
         }
-        public Changer refuseReason(String refuseReason){
-            Order.this.refuseReason = refuseReason;
+
+        public Order.Changer price(Long price) {
+            if (!Order.this.price.equals(price) && price != null) {
+                Order.this.price = price;
+            }
             return this;
         }
-        public Changer price(Long price){
-            Order.this.price = price;
-            return this;
-        }
-        public Order change(){
+
+        public Order change() {
             return Order.this;
         }
-
-
     }
+
 }

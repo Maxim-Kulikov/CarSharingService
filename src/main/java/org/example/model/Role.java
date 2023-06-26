@@ -3,14 +3,10 @@ package org.example.model;
 import lombok.*;
 import javax.persistence.*;
 
-@Getter
-@Setter
-@EqualsAndHashCode
-@ToString
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-
 @Entity
 @Table(name = "roles")
 public class Role /*implements GrantedAuthority*/ {

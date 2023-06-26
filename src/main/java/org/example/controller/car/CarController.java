@@ -6,6 +6,8 @@ import org.example.dto.exception.MarkNotFoundException;
 import org.example.dto.exception.ModelNotFoundException;
 import org.example.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,28 +20,28 @@ public class CarController {
     private final CarService carService;
 
     @GetMapping("/description/{id}")
-    public CarDescriptionResp getDescription(@PathVariable Integer id) {
-        return carService.getCarDescription(id);
+    public ResponseEntity<CarDescriptionResp> getDescription(@PathVariable Integer id) {
+        return new ResponseEntity<>(carService.getCarDescription(id), HttpStatus.OK);
     }
 
-    @GetMapping("/presentation")
-    public List<CarInfoResp> getAllPresentation(CarFilterReq filter) {
-        return carService.getAllCarsPresentation(filter);
+    @PostMapping("/presentation")
+    public ResponseEntity<List<CarInfoResp>> getAllPresentation(@RequestBody CarFilterReq filter) {
+        return new ResponseEntity<>(carService.getAllCarsPresentation(filter), HttpStatus.OK);
     }
 
-    @GetMapping("/description")
-    public List<CarDescriptionResp> getAllDescription(CarFilterReq filter) {
-        return carService.getAllCarsDescription(filter);
+    @PostMapping("/description")
+    public ResponseEntity<List<CarDescriptionResp>> getAllDescription(@RequestBody CarFilterReq filter) {
+        return new ResponseEntity<>(carService.getAllCarsDescription(filter), HttpStatus.OK);
     }
 
     @PostMapping("/save")
-    public CarDescriptionResp save(@RequestBody CarCreateReq dto) throws MarkNotFoundException, ModelNotFoundException {
-        return carService.save(dto);
+    public ResponseEntity<CarDescriptionResp> save(@RequestBody CarCreateReq dto) throws MarkNotFoundException, ModelNotFoundException {
+        return new ResponseEntity<>(carService.save(dto), HttpStatus.OK);
     }
 
     @PatchMapping("/update/{id}")
-    public CarDescriptionResp update(@RequestBody CarUpdateReq dto, @PathVariable Integer id) throws MarkNotFoundException, ModelNotFoundException {
-        return carService.update(dto, id);
+    public ResponseEntity<CarDescriptionResp> update(@RequestBody CarUpdateReq dto, @PathVariable Integer id) throws MarkNotFoundException, ModelNotFoundException {
+        return new ResponseEntity<>(carService.update(dto, id), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -48,13 +50,7 @@ public class CarController {
     }
 
     @GetMapping("/presentation/{id}")
-    public CarInfoResp getPresentation(@PathVariable Integer id) {
-        return carService.getCarPresentation(id);
+    public ResponseEntity<CarInfoResp> getPresentation(@PathVariable Integer id) {
+        return new ResponseEntity<>(carService.getCarPresentation(id), HttpStatus.OK);
     }
-
-    /*@PostMapping(value = "/save/for/liza", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public void saveForLiza(@RequestPart MultipartFile file, @RequestPart CarCreateReq dto) {
-        System.out.println(file.getName());
-        System.out.println(dto.toString());
-    }*/
 }

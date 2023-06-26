@@ -1,12 +1,15 @@
 package org.example.controller.user;
 
 import lombok.AllArgsConstructor;
+import org.example.dto.exception.UserIsExistedException;
 import org.example.dto.exception.UserNotFoundException;
 import org.example.dto.userDTO.UserAuthReq;
 import org.example.dto.userDTO.UserExistedResp;
 import org.example.dto.userDTO.UserUpdateReq;
 import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,31 +22,33 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/{id}")
-    public List<UserExistedResp> get(@PathVariable Long id) throws UserNotFoundException {
-        return List.of(userService.getExistedUser(id));
+    public ResponseEntity<UserExistedResp> get(@PathVariable Long id) throws UserNotFoundException {
+        return new ResponseEntity<>(userService.getExistedUser(id), HttpStatus.OK);
     }
 
     @GetMapping("")
-    public List<UserExistedResp> get() throws UserNotFoundException {
-        return userService.getAll();
+    public ResponseEntity<List<UserExistedResp>> get() {
+        return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
     }
 
     @PostMapping("/save")
-    public UserExistedResp save(@RequestBody UserAuthReq dto) {
-        if (dto.getLogin().isBlank() || dto.getPassword().isBlank()) {
+    public ResponseEntity<UserExistedResp> save(@RequestBody UserAuthReq dto) throws UserIsExistedException {
+        String login = dto.getLogin();
+        String password = dto.getPassword();
+        if (login == null || password == null || login.isBlank() || password.isBlank()) {
             throw new RuntimeException("User could not be saved, empty password or login");
         }
-        return userService.save(dto);
+        return new ResponseEntity<>(userService.save(dto), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) throws UserNotFoundException {
         userService.delete(id);
     }
 
     @PatchMapping("/update/{id}")
-    public UserExistedResp update(@RequestBody UserUpdateReq dto, @PathVariable Long id) throws UserNotFoundException {
-        return userService.update(dto, id);
+    public ResponseEntity<UserExistedResp> update(@RequestBody UserUpdateReq dto, @PathVariable Long id) throws UserNotFoundException, UserIsExistedException {
+        return new ResponseEntity<>(userService.update(dto, id), HttpStatus.OK);
     }
 
     /*@PostMapping("/get/jwt")
