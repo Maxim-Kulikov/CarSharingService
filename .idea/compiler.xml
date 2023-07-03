@@ -23,12 +23,6 @@
         <module name="CarSharingService.photo_service" />
         <module name="photo-service" />
       </profile>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="photo_service" />
-      </profile>
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
@@ -44,10 +38,15 @@
         </processorPath>
         <module name="CarSharingService.api-gateway.main" />
       </profile>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17">
       <module name="photo-service" target="11" />
-      <module name="photo_service" target="17" />
+      <module name="photo_service" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -55,7 +54,7 @@
       <module name="CarSharingService.photo_service" options="-parameters" />
       <module name="auth-service" options="-parameters" />
       <module name="photo-service" options="-parameters" />
-      <module name="photo_service" options="" />
+      <module name="photo_service" options="-parameters" />
     </option>
   </component>
 </project>

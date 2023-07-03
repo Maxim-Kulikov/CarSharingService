@@ -1,4 +1,2 @@
 rootProject.name = 'CarSharingService'
-include 'common-models'
-include 'api-gateway'
-include 'photo_service'
+include ('common-models', 'api-gateway', 'photo_service')
