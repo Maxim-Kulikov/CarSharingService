@@ -31,6 +31,7 @@ dependencies {
     implementation 'org.yaml:snakeyaml:1.33'
 
     implementation project(':common-models')
+
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.15'
 
 
@@ -39,7 +40,7 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework.boot:spring-boot-configuration-metadata'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
-    implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.4'
+    //implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.4'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
 
     compileOnly 'org.projectlombok:lombok'

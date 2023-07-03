@@ -5,6 +5,7 @@
       <option name="customHeaders">
         <set>
           <option value="error" />
+          <option value="class" />
         </set>
       </option>
     </inspection_tool>

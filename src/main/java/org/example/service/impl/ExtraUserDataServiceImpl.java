@@ -1,7 +1,6 @@
 package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import org.example.comparator.ExtraUserDataComparator;
 import org.example.dto.exception.UserNotFoundException;
 import org.example.dto.sortenum.SortField;
@@ -15,7 +14,6 @@ import org.example.model.ExtraUserData;
 import org.example.service.ExtraUserDataService;
 import org.example.util.SortParamsValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,14 +66,13 @@ public class ExtraUserDataServiceImpl implements ExtraUserDataService {
         Stream<ExtraUserData> stream = list.stream().filter(data -> {
             if (!(names == null
                     || names.isEmpty()
-                    || names.contains(data.getName()))
-            ) {
+                    || !names.contains(data.getName()))) {
                 return false;
             }
 
             if (!(lastnames == null
                     || lastnames.isEmpty()
-                    || lastnames.contains(data.getLastname()))
+                    || !lastnames.contains(data.getLastname()))
             ) {
                 return false;
             }

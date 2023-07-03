@@ -18,7 +18,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/photos")
+@RequestMapping("/api/photos")
 public class PhotoController {
     @Autowired
     private final PhotoService photoService;

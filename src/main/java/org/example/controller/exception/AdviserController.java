@@ -61,8 +61,12 @@ public class AdviserController extends ResponseEntityExceptionHandler {
 
     private ResponseEntity<Response> getResponseEntity(Exception e, HttpStatus httpStatus) {
         Response response = new Response();
-        response.setMessage(e.getMessage());
-        return new ResponseEntity<>(response, httpStatus);
+        String message = e.getMessage();
+        response.setMessage(message);
+        return ResponseEntity
+                .status(httpStatus)
+                .header("error", message)
+                .body(response);
     }
 
 }

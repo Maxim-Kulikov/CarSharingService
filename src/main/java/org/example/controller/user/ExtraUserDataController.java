@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/users/extra-data")
+@RequestMapping("/api/users/extra-data")
 public class ExtraUserDataController {
     @Autowired
     private final ExtraUserDataService extraUserDataService;

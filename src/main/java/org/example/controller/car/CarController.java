@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/cars")
+@RequestMapping("/api/cars")
 public class CarController {
     @Autowired
     private final CarService carService;
