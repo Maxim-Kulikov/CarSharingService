@@ -9,7 +9,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/api-gateway" />
             <option value="$PROJECT_DIR$/common-models" />
+            <option value="$PROJECT_DIR$/photo_service" />
           </set>
         </option>
       </GradleProjectSettings>
