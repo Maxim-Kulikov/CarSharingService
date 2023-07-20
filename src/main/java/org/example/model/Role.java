@@ -1,6 +1,7 @@
 package org.example.model;
 
 import lombok.*;
+
 import javax.persistence.*;
 
 @Data
@@ -9,7 +10,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "roles")
-public class Role /*implements GrantedAuthority*/ {
+public class Role {
     @Id
     @Column(name = "id")
     private Short id;
@@ -17,8 +18,4 @@ public class Role /*implements GrantedAuthority*/ {
     @Column(name = "role")
     private String role;
 
-    /*@Override
-    public String getAuthority() {
-        return role;
-    }*/
 }

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Table(name = "users")
-public class User /*implements UserDetails*/ {
+public class User {
     @Id
     @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(generator = "users_id_seq")
@@ -32,49 +32,11 @@ public class User /*implements UserDetails*/ {
     @JoinColumn(name = "id_extra_users_data", referencedColumnName = "id")
     private ExtraUserData extraUserData;
 
-
-    /*@Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(role);
-    }
-
-    @Override
-    public String getUsername() {
-        return login;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-*/
     public Changer changer() {
         return new Changer();
     }
 
     public class Changer {
-        public Changer id(Long id) {
-            if (id != null) {
-                User.this.id = id;
-            }
-            return this;
-        }
 
         public Changer login(String login) {
             if (!login.isBlank()) {
@@ -91,16 +53,12 @@ public class User /*implements UserDetails*/ {
         }
 
         public Changer role(Role role) {
-            if (role != null) {
-                User.this.role = role;
-            }
+            User.this.role = role;
             return this;
         }
 
         public Changer extraUserData(ExtraUserData extraUserData) {
-            if (extraUserData != null) {
-                User.this.extraUserData = extraUserData;
-            }
+            User.this.extraUserData = extraUserData;
             return this;
         }
 

@@ -1,5 +1,6 @@
 package org.example.controller.exception;
 
+import lombok.AllArgsConstructor;
 import org.example.dto.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
+@AllArgsConstructor
 public class AdviserController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Response> handleUserNotFoundException(UserNotFoundException e) {

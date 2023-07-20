@@ -1,6 +1,7 @@
 package org.example.service.impl;
 
 import lombok.AllArgsConstructor;
+import org.example.dto.exception.RoleNotFoundException;
 import org.example.dto.exception.UserIsExistedException;
 import org.example.dto.exception.UserNotFoundException;
 import org.example.repository.RoleDao;
@@ -32,33 +33,6 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     @Autowired
     private final RoleDao roleDao;
-    /*@Autowired
-    private final JwtTokenUtil jwtTokenUtil;
-    @Autowired
-    private final UserDetailsService userDetailsService;
-    @Autowired
-    private final AuthenticationManager authenticationManager;
-    @Override
-    @Transactional
-    public JwtTokenResp getJwtToken(UserAuthReq dto){
-        Authentication authentication;
-        try {
-            authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(dto.getLogin(), dto.getPassword()));
-            System.out.println(authentication);
-        } catch (BadCredentialsException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или пароль неправильны", e);
-        }
-        //String jwt = jwtTokenUtil.generateToken((UserDetails) authentication.getPrincipal());
-        UserDetails userDetails = userDetailsService.loadUserByUsername(dto.getLogin());
-        String jwtToken = jwtTokenUtil.generateToken(userDetails);
-        String[] chunks = jwtToken.split("\\.");
-        Base64.Decoder decoder = Base64.getUrlDecoder();
-        System.out.println("UserServiceImpl getJwtToken:\n" + new String(decoder.decode(chunks[0])));
-        System.out.println(new String(decoder.decode(chunks[1])));
-        return new JwtTokenResp(jwtToken);
-    }
-*/
 
     @Override
     @Transactional
@@ -92,9 +66,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserExistedResp findByLogin(String login) throws UserNotFoundException {
-        User user = getUserOrThrowException(login);
-        return userMapper.toUserExistedResp(user);
+    public User findByLogin(String login) throws UserNotFoundException {
+        return getUserOrThrowException(login).changer().extraUserData(null).change();
     }
 
     @Override
@@ -127,7 +100,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserExistedResp(user);
     }
 
-    private User setRole(User user) {
+    private User setRole(User user) throws RoleNotFoundException {
         user.setRole(findRole(ROLE_USER));
         return user;
     }
@@ -137,9 +110,9 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private Role findRole(Short id) {
+    private Role findRole(Short id) throws RoleNotFoundException {
         return roleDao.getRoleById(id)
-                .orElseThrow(() -> new RuntimeException("Error during getting of role"));
+                .orElseThrow(() -> new RoleNotFoundException(id));
     }
 
     public User updateUserWithChanger(User model, UserUpdateReq dto) {
@@ -177,4 +150,5 @@ public class UserServiceImpl implements UserService {
         return getOptionalOfUser(login, password)
                 .orElseThrow(() -> new UserNotFoundException(login, password));
     }
+
 }

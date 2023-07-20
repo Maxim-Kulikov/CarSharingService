@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.example.comparator.CarComparator;
 import org.example.dto.carDTO.*;
+import org.example.dto.exception.CarNotFoundException;
 import org.example.dto.exception.MarkNotFoundException;
 import org.example.dto.exception.ModelNotFoundException;
 import org.example.dto.sortenum.SortField;
@@ -47,18 +48,18 @@ public class CarServiceImpl implements CarService {
 
     @Transactional
     @Override
-    public CarInfoResp getCarPresentation(Integer id) {
+    public CarInfoResp getCarPresentation(Integer id) throws CarNotFoundException {
         return carMapper.toCarPresentationDto(
                 carDao.findFirstById(id).
-                        orElseThrow(() -> new RuntimeException("Could not find car by this id!"))
+                        orElseThrow(() -> new CarNotFoundException(id))
         );
     }
 
     @Transactional
     @Override
-    public CarDescriptionResp update(CarUpdateReq dto, Integer id) throws MarkNotFoundException, ModelNotFoundException {
+    public CarDescriptionResp update(CarUpdateReq dto, Integer id) throws MarkNotFoundException, ModelNotFoundException, CarNotFoundException {
         Car car = carDao.findFirstById(id)
-                .orElseThrow(() -> new RuntimeException("Could not find car by this id!"));
+                .orElseThrow(() -> new CarNotFoundException(id));
         CarModel carModel = saveOrGetExisted(dto.getMark(), dto.getModel());
 
         car = update(dto, car, carModel);
@@ -69,9 +70,9 @@ public class CarServiceImpl implements CarService {
 
     @Transactional
     @Override
-    public CarDescriptionResp getCarDescription(Integer id) {
+    public CarDescriptionResp getCarDescription(Integer id) throws CarNotFoundException {
         Car car = carDao.findFirstById(id)
-                .orElseThrow(() -> new RuntimeException("Could not find car by this id!"));
+                .orElseThrow(() -> new CarNotFoundException(id));
         return carMapper.toCarDescriptionResp(car);
     }
 

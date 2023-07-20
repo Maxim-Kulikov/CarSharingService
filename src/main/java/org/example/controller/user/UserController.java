@@ -6,6 +6,7 @@ import org.example.dto.exception.UserNotFoundException;
 import org.example.dto.userDTO.UserAuthReq;
 import org.example.dto.userDTO.UserExistedResp;
 import org.example.dto.userDTO.UserUpdateReq;
+import org.example.model.User;
 import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class UserController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<UserExistedResp>> get() {
+    public ResponseEntity<List<UserExistedResp>> get() throws UserNotFoundException {
         return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
     }
 
@@ -51,9 +52,8 @@ public class UserController {
         return new ResponseEntity<>(userService.update(dto, id), HttpStatus.OK);
     }
 
-    /*@PostMapping("/get/jwt")
-    public ResponseEntity<String> getJwt(@RequestBody UserAuthReq dto){
-        return userService.Jwt(dto);
-    }*/
-
+    @GetMapping("/details/{login}")
+    public ResponseEntity<User> getUserDetails(@PathVariable String login) throws UserNotFoundException {
+        return new ResponseEntity<>(userService.findByLogin(login), HttpStatus.OK);
+    }
 }

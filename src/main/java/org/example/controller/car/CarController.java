@@ -2,6 +2,7 @@ package org.example.controller.car;
 
 import lombok.AllArgsConstructor;
 import org.example.dto.carDTO.*;
+import org.example.dto.exception.CarNotFoundException;
 import org.example.dto.exception.MarkNotFoundException;
 import org.example.dto.exception.ModelNotFoundException;
 import org.example.service.CarService;
@@ -20,7 +21,7 @@ public class CarController {
     private final CarService carService;
 
     @GetMapping("/description/{id}")
-    public ResponseEntity<CarDescriptionResp> getDescription(@PathVariable Integer id) {
+    public ResponseEntity<CarDescriptionResp> getDescription(@PathVariable Integer id) throws CarNotFoundException {
         return new ResponseEntity<>(carService.getCarDescription(id), HttpStatus.OK);
     }
 
@@ -40,7 +41,7 @@ public class CarController {
     }
 
     @PatchMapping("/update/{id}")
-    public ResponseEntity<CarDescriptionResp> update(@RequestBody CarUpdateReq dto, @PathVariable Integer id) throws MarkNotFoundException, ModelNotFoundException {
+    public ResponseEntity<CarDescriptionResp> update(@RequestBody CarUpdateReq dto, @PathVariable Integer id) throws MarkNotFoundException, ModelNotFoundException, CarNotFoundException {
         return new ResponseEntity<>(carService.update(dto, id), HttpStatus.OK);
     }
 
@@ -50,7 +51,7 @@ public class CarController {
     }
 
     @GetMapping("/presentation/{id}")
-    public ResponseEntity<CarInfoResp> getPresentation(@PathVariable Integer id) {
+    public ResponseEntity<CarInfoResp> getPresentation(@PathVariable Integer id) throws CarNotFoundException {
         return new ResponseEntity<>(carService.getCarPresentation(id), HttpStatus.OK);
     }
 }
